@@ -59,16 +59,3 @@ public abstract class ScriptableBaseListener<T> : ScriptableObject
     public IEventListener<T> Listener;
 }
 
-[System.Serializable]
-[CreateAssetMenu(fileName = "NewVoidEvent", menuName = "ScriptableEvents/Events/Create VoidEvent")]
-public class ScriptableVoidEvent : ScriptableBaseEvent
-{
-
-}
-
-[System.Serializable]
-[CreateAssetMenu(fileName = "NewVoidListener", menuName = "ScriptableEvents/Events/Create VoidListener")]
-public class ScriptableVoidListener : ScriptableBaseListener
-{
-
-}
