@@ -1,8 +1,8 @@
+using MSS.ScriptableEvents;
 using UnityEngine;
 
 [System.Serializable]
-[CreateAssetMenu(fileName = "NewBaseEvent", menuName = "ScriptableEvents/Events/Create BaseEvent")]
-public class ScriptableBaseEvent : ScriptableObject
+public abstract class ScriptableBaseEvent : ScriptableObject
 {
     public BaseEvent Event;
 
@@ -11,47 +11,64 @@ public class ScriptableBaseEvent : ScriptableObject
         Event.Invoke();
     }
 
-    public void AddListener(IListener listener)
+    public void AddListener(IEventListener listener)
     {
         Event.AddListener(listener);
     }
 
-    public void RemoveListener(IListener listener)
+    public void RemoveListener(IEventListener listener)
     {
         Event.RemoveListener(listener);
     }
 }
 
+[System.Serializable]
 public abstract class ScriptableBaseEvent<T> : ScriptableObject
 {
     public BaseEvent<T> Event;
 
-     public void Invoke(T data)
+    public void Invoke(T data)
     {
         Event.Invoke(data);
     }
 
-    public void AddListener(IListener<T> listener)
+    public void AddListener(IEventListener<T> listener)
     {
         Event.AddListener(listener);
     }
 
-    public void RemoveListener(IListener<T> listener)
+    public void RemoveListener(IEventListener<T> listener)
     {
         Event.RemoveListener(listener);
     }
 }
 
 
-[CreateAssetMenu(fileName = "NewBaseListener", menuName = "ScriptableEvents/Events/Create BaseListener")]
-public class ScriptableBaseListener : ScriptableObject
+[System.Serializable]
+public abstract class ScriptableBaseListener : ScriptableObject
 {
     [SerializeReference]
-    public BaseListener Listener;
+    public IEventListener Listener;
 }
 
+
+[System.Serializable]
 public abstract class ScriptableBaseListener<T> : ScriptableObject
 {
     [SerializeReference]
-    public IListener<T> Listener;
+    public IEventListener<T> Listener;
+}
+
+[System.Serializable]
+[CreateAssetMenu(fileName = "NewVoidEvent", menuName = "ScriptableEvents/Events/Create VoidEvent")]
+public class ScriptableVoidEvent : ScriptableBaseEvent
+{
+
+}
+
+[System.Serializable]
+[CreateAssetMenu(fileName = "NewVoidListener", menuName = "ScriptableEvents/Events/Create VoidListener")]
+public class ScriptableVoidListener : ScriptableBaseListener
+{
+
 }
