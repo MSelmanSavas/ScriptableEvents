@@ -24,9 +24,9 @@ namespace MSS.ScriptableEvents
     {
         void OnInvoke();
         UnityEvent Actions { get; }
-        List<BaseEvent> EventsToListen { get; }
-        void AddEventToListen(BaseEvent baseEvent, bool updateSubscription = false);
-        void RemoveEventToLister(BaseEvent baseEvent, bool updateSubscription = false);
+        List<IEvent> EventsToListen { get; }
+        void AddEventToListen(IEvent baseEvent, bool updateSubscription = false);
+        void RemoveEventToLister(IEvent baseEvent, bool updateSubscription = false);
         void Subscribe();
         void UnSubscribe();
     }
@@ -42,9 +42,9 @@ namespace MSS.ScriptableEvents
     {
         void OnInvoke(T data);
         UnityEvent<T> Actions { get; }
-        List<BaseEvent<T>> EventsToListen { get; }
-        void AddEventToListen(BaseEvent<T> baseEvent, bool updateSubscription = false);
-        void RemoveEventToLister(BaseEvent<T> baseEvent, bool updateSubscription = false);
+        List<IEvent<T>> EventsToListen { get; }
+        void AddEventToListen(IEvent<T> baseEvent, bool updateSubscription = false);
+        void RemoveEventToLister(IEvent<T> baseEvent, bool updateSubscription = false);
         void Subscribe();
         void UnSubscribe();
     }
@@ -63,8 +63,7 @@ namespace MSS.ScriptableEvents
     }
 }
 
-
-
+[System.Serializable]
 public abstract class BaseEvent : IEvent
 {
     #region Members
@@ -93,6 +92,7 @@ public abstract class BaseEvent : IEvent
     #endregion
 }
 
+[System.Serializable]
 public abstract class BaseEvent<T> : IEvent<T>
 {
     #region Members
@@ -133,10 +133,10 @@ public abstract class BaseEventListener : IEventListener
 
     public UnityEvent Actions { get => _actions; }
 
-    [SerializeField]
-    protected List<BaseEvent> _eventsToListen = new();
+    [SerializeReference]
+    protected List<IEvent> _eventsToListen = new();
 
-    public virtual List<BaseEvent> EventsToListen => _eventsToListen;
+    public virtual List<IEvent> EventsToListen => _eventsToListen;
 
     #endregion
 
@@ -163,7 +163,7 @@ public abstract class BaseEventListener : IEventListener
         }
     }
 
-    public void AddEventToListen(BaseEvent baseEvent, bool updateSubscription = false)
+    public void AddEventToListen(IEvent baseEvent, bool updateSubscription = false)
     {
         _eventsToListen.Add(baseEvent);
 
@@ -171,7 +171,7 @@ public abstract class BaseEventListener : IEventListener
             baseEvent.AddListener(this);
     }
 
-    public void RemoveEventToLister(BaseEvent baseEvent, bool updateSubscription = false)
+    public void RemoveEventToLister(IEvent baseEvent, bool updateSubscription = false)
     {
         _eventsToListen.Remove(baseEvent);
 
@@ -188,7 +188,7 @@ public abstract class BaseScriptableEventListener : BaseEventListener, IScriptab
 {
     #region Members
 
-    public override List<BaseEvent> EventsToListen
+    public override List<IEvent> EventsToListen
     {
         get
         {
@@ -243,14 +243,13 @@ public abstract class BaseScriptableEventListener : BaseEventListener, IScriptab
 }
 
 [System.Serializable]
-public class ScriptableVoidEventListener : BaseScriptableEventListener
-{
-
-}
-
 public class VoidEventListener : BaseEventListener
 {
+}
 
+[System.Serializable]
+public class VoidEventListenerScriptable : BaseScriptableEventListener
+{
 }
 
 public abstract class BaseEventListener<T> : IEventListener<T>
@@ -263,9 +262,9 @@ public abstract class BaseEventListener<T> : IEventListener<T>
     public UnityEvent<T> Actions => _listenerEvents;
 
     [SerializeField]
-    protected List<BaseEvent<T>> _eventsToListen = new();
+    protected List<IEvent<T>> _eventsToListen = new();
 
-    public virtual List<BaseEvent<T>> EventsToListen => _eventsToListen;
+    public virtual List<IEvent<T>> EventsToListen => _eventsToListen;
 
     #endregion
 
@@ -292,7 +291,7 @@ public abstract class BaseEventListener<T> : IEventListener<T>
         }
     }
 
-    public void AddEventToListen(BaseEvent<T> baseEvent, bool updateSubscription = false)
+    public void AddEventToListen(IEvent<T> baseEvent, bool updateSubscription = false)
     {
         _eventsToListen.Add(baseEvent);
 
@@ -300,7 +299,7 @@ public abstract class BaseEventListener<T> : IEventListener<T>
             baseEvent.AddListener(this);
     }
 
-    public void RemoveEventToLister(BaseEvent<T> baseEvent, bool updateSubscription = false)
+    public void RemoveEventToLister(IEvent<T> baseEvent, bool updateSubscription = false)
     {
         _eventsToListen.Remove(baseEvent);
 
@@ -315,7 +314,7 @@ public abstract class BaseScriptableEventListener<T> : BaseEventListener<T>, ISc
 {
     #region Members
 
-    public override List<BaseEvent<T>> EventsToListen
+    public override List<IEvent<T>> EventsToListen
     {
         get
         {

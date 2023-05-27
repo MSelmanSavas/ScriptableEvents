@@ -4,8 +4,9 @@ using UnityEngine;
 [System.Serializable]
 public abstract class ScriptableBaseEvent : ScriptableObject
 {
-    public BaseEvent Event;
+    public abstract IEvent Event { get; }
 
+    [MethodButton]
     public void Invoke()
     {
         Event.Invoke();
@@ -25,7 +26,7 @@ public abstract class ScriptableBaseEvent : ScriptableObject
 [System.Serializable]
 public abstract class ScriptableBaseEvent<T> : ScriptableObject
 {
-    public BaseEvent<T> Event;
+    public abstract IEvent<T> Event { get; }
 
     public void Invoke(T data)
     {
@@ -47,15 +48,13 @@ public abstract class ScriptableBaseEvent<T> : ScriptableObject
 [System.Serializable]
 public abstract class ScriptableBaseListener : ScriptableObject
 {
-    [SerializeReference]
-    public IEventListener Listener;
+    public abstract IScriptableEventListener Listener { get; }
 }
 
 
 [System.Serializable]
 public abstract class ScriptableBaseListener<T> : ScriptableObject
 {
-    [SerializeReference]
-    public IEventListener<T> Listener;
+    public abstract IScriptableEventListener<T> Listener { get; }
 }
 
