@@ -6,56 +6,99 @@ using System.Collections.Generic;
 
 namespace MSS.ScriptableEvents
 {
-    public interface IEvent<T>
+    public interface IEventData
     {
-        void Invoke(T data);
-        void AddListener(IEventListener<T> listener);
-        void RemoveListener(IEventListener<T> listener);
+        public UnityAction Action { get; }
     }
 
-    public interface IEvent
+    public interface IEventInvoker
     {
         void Invoke();
-        void AddListener(IEventListener listener);
-        void RemoveListener(IEventListener listener);
     }
 
-    public interface IEventListener
+    public interface IEventLogic
+    {
+        void AddListener(IEventListenerInvoker listener);
+        void RemoveListener(IEventListenerInvoker listener);
+    }
+
+    public interface IEventData<T>
+    {
+        public UnityAction<T> Action { get; }
+    }
+
+    public interface IEventInvoker<T>
+    {
+        void Invoke(T data);
+    }
+
+    public interface IEventLogic<T>
+    {
+        void AddListener(IEventListenerInvoker<T> listener);
+        void RemoveListener(IEventListenerInvoker<T> listener);
+    }
+
+    public interface IEventListenerData
+    {
+        UnityEvent Actions { get; }
+        List<IEventLogic> EventsToListen { get; }
+    }
+
+    public interface IEventListenerInvoker
     {
         void OnInvoke();
-        UnityEvent Actions { get; }
-        List<IEvent> EventsToListen { get; }
-        void AddEventToListen(IEvent baseEvent, bool updateSubscription = false);
-        void RemoveEventToLister(IEvent baseEvent, bool updateSubscription = false);
         void Subscribe();
         void UnSubscribe();
     }
 
-    public interface IScriptableEventListener : IEventListener
+    public interface IEventListenerLogic
     {
+        void AddEventToListen(IEventLogic baseEvent, bool updateSubscription = false);
+        void RemoveEventToLister(IEventLogic baseEvent, bool updateSubscription = false);
+
+    }
+
+    public interface IEventListenerData<T>
+    {
+        UnityEvent<T> Actions { get; }
+        List<IEventLogic<T>> EventsToListen { get; }
+    }
+
+    public interface IEventListenerInvoker<T>
+    {
+        void OnInvoke(T data);
+        void Subscribe();
+        void UnSubscribe();
+    }
+
+    public interface IEventListenerLogic<T>
+    {
+        void AddEventToListen(IEventLogic<T> baseEvent, bool updateSubscription = false);
+        void RemoveEventToLister(IEventLogic<T> baseEvent, bool updateSubscription = false);
+
+    }
+
+    public interface IScriptableEventListenerData
+    {
+        UnityEvent Actions { get; }
         List<ScriptableBaseEvent> ScriptableEventsToListen { get; }
-        bool AreEventsSynched();
-        void ForceSyncEvents();
+    }
+
+    public interface IScriptableEventListenerLogic
+    {
         void AddScriptableEventToListen(ScriptableBaseEvent scriptableBaseEvent, bool updateSubscription = false);
         void RemoveScriptableEventToLister(ScriptableBaseEvent scriptableBaseEvent, bool updateSubscription = false);
     }
 
-    public interface IEventListener<T>
+
+    public interface IScriptableEventListenerData<T>
     {
-        void OnInvoke(T data);
         UnityEvent<T> Actions { get; }
-        List<IEvent<T>> EventsToListen { get; }
-        void AddEventToListen(IEvent<T> baseEvent, bool updateSubscription = false);
-        void RemoveEventToLister(IEvent<T> baseEvent, bool updateSubscription = false);
-        void Subscribe();
-        void UnSubscribe();
+        List<ScriptableBaseEvent<T>> ScriptableEventsToListen { get; }
     }
 
-    public interface IScriptableEventListener<T> : IEventListener<T>
+    public interface IScriptableEventListenerLogic<T>
     {
-        List<ScriptableBaseEvent<T>> ScriptableEventsToListen { get; }
-        bool AreEventsSynched();
-        void ForceSyncEvents();
         void AddScriptableEventToListen(ScriptableBaseEvent<T> scriptableBaseEvent, bool updateSubscription = false);
         void RemoveScriptableEventToLister(ScriptableBaseEvent<T> scriptableBaseEvent, bool updateSubscription = false);
     }
@@ -68,11 +111,14 @@ namespace MSS.ScriptableEvents
 }
 
 [System.Serializable]
-public abstract class BaseEvent : IEvent
+public abstract class BaseEvent : IEventData, IEventInvoker, IEventLogic
 {
     #region Members
 
-    protected event Action _onInvoke;
+    [SerializeField]
+    protected event UnityAction _onInvoke;
+
+    public UnityAction Action => _onInvoke;
 
     #endregion
 
@@ -83,13 +129,15 @@ public abstract class BaseEvent : IEvent
         _onInvoke?.Invoke();
     }
 
-    public void AddListener(IEventListener listener)
+    public void AddListener(IEventListenerInvoker listener)
     {
+        Debug.LogError($"Here Add Listener : {listener}");
         _onInvoke += listener.OnInvoke;
     }
 
-    public void RemoveListener(IEventListener listener)
+    public void RemoveListener(IEventListenerInvoker listener)
     {
+        Debug.LogError($"Here Remove Listener : {listener}");
         _onInvoke -= listener.OnInvoke;
     }
 
@@ -97,11 +145,14 @@ public abstract class BaseEvent : IEvent
 }
 
 [System.Serializable]
-public abstract class BaseEvent<T> : IEvent<T>
+public abstract class BaseEvent<T> : IEventData<T>, IEventInvoker<T>, IEventLogic<T>
 {
     #region Members
 
-    protected event Action<T> _onInvoke;
+    [SerializeField]
+    protected event UnityAction<T> _onInvoke;
+
+    public UnityAction<T> Action => _onInvoke;
 
     #endregion
 
@@ -113,22 +164,21 @@ public abstract class BaseEvent<T> : IEvent<T>
         _onInvoke?.Invoke(data);
     }
 
-    public void AddListener(IEventListener<T> listener)
+    public void AddListener(IEventListenerInvoker<T> listener)
     {
         _onInvoke += listener.OnInvoke;
     }
 
-    public void RemoveListener(IEventListener<T> listener)
+    public void RemoveListener(IEventListenerInvoker<T> listener)
     {
         _onInvoke -= listener.OnInvoke;
     }
-
 
     #endregion
 }
 
 [System.Serializable]
-public abstract class BaseEventListener : IEventListener
+public abstract class BaseEventListener : IEventListenerData, IEventListenerInvoker, IEventListenerLogic
 {
     #region Members
 
@@ -138,9 +188,9 @@ public abstract class BaseEventListener : IEventListener
     public UnityEvent Actions { get => _actions; }
 
     [SerializeReference, SubclassSelector]
-    protected List<IEvent> _eventsToListen = new();
+    protected List<IEventLogic> _eventsToListen = new();
 
-    public virtual List<IEvent> EventsToListen => _eventsToListen;
+    public virtual List<IEventLogic> EventsToListen => _eventsToListen;
 
     #endregion
 
@@ -167,46 +217,34 @@ public abstract class BaseEventListener : IEventListener
         }
     }
 
-    public void AddEventToListen(IEvent baseEvent, bool updateSubscription = false)
+    public void AddEventToListen(IEventLogic eventLogic, bool updateSubscription = false)
     {
-        _eventsToListen.Add(baseEvent);
+        _eventsToListen.Add(eventLogic);
 
         if (updateSubscription)
-            baseEvent.AddListener(this);
+            eventLogic.AddListener(this);
     }
 
-    public void RemoveEventToLister(IEvent baseEvent, bool updateSubscription = false)
+    public void RemoveEventToLister(IEventLogic eventLogic, bool updateSubscription = false)
     {
-        _eventsToListen.Remove(baseEvent);
+        _eventsToListen.Remove(eventLogic);
 
         if (updateSubscription)
-            baseEvent.RemoveListener(this);
+            eventLogic.RemoveListener(this);
     }
-
 
     #endregion
 }
 
 [System.Serializable]
-public abstract class BaseScriptableEventListener : BaseEventListener, IScriptableEventListener
+public abstract class BaseScriptableEventListener : IScriptableEventListenerData, IScriptableEventListenerLogic, IEventListenerInvoker
 {
     #region Members
 
-    public override List<IEvent> EventsToListen
-    {
-        get
-        {
-            if (_eventsToListen == null || _eventsToListen.Count != _scriptableEventsToListen.Count)
-            {
-                _eventsToListen = new();
+    [SerializeField]
+    protected UnityEvent _actions = new();
 
-                foreach (var scriptableEvent in _scriptableEventsToListen)
-                    _eventsToListen.Add(scriptableEvent.Event);
-            }
-
-            return _eventsToListen;
-        }
-    }
+    public UnityEvent Actions { get => _actions; }
 
     [SerializeField]
     protected List<ScriptableBaseEvent> _scriptableEventsToListen = new();
@@ -228,47 +266,37 @@ public abstract class BaseScriptableEventListener : BaseEventListener, IScriptab
     public void AddScriptableEventToListen(ScriptableBaseEvent scriptableBaseEvent, bool updateSubscription = false)
     {
         _scriptableEventsToListen.Add(scriptableBaseEvent);
-        _eventsToListen.Add(scriptableBaseEvent.Event);
 
         if (updateSubscription)
-            scriptableBaseEvent.Event.AddListener(this);
+            scriptableBaseEvent.EventLogic.AddListener(this);
     }
 
     public void RemoveScriptableEventToLister(ScriptableBaseEvent scriptableBaseEvent, bool updateSubscription = false)
     {
         _scriptableEventsToListen.Remove(scriptableBaseEvent);
-        _eventsToListen.Remove(scriptableBaseEvent.Event);
 
         if (updateSubscription)
-            scriptableBaseEvent.Event.RemoveListener(this);
+            scriptableBaseEvent.EventLogic.RemoveListener(this);
     }
 
-    public bool AreEventsSynched()
+    public void OnInvoke()
     {
-        List<IEvent> events = EventsToListen;
-
-        if (events == null)
-            return false;
-
-        if (events.Count != _scriptableEventsToListen.Count)
-            return false;
-
-        for (int i = 0; i < events.Count; i++)
-        {
-            if (events[i] != _scriptableEventsToListen[i].Event)
-                return false;
-        }
-
-        return true;
+        Actions?.Invoke();
     }
 
-    public void ForceSyncEvents()
+    public void Subscribe()
     {
-        _eventsToListen.Clear();
-
         foreach (var scriptableEvent in _scriptableEventsToListen)
         {
-            _eventsToListen.Add(scriptableEvent.Event);
+            scriptableEvent.AddListener(this);
+        }
+    }
+
+    public void UnSubscribe()
+    {
+        foreach (var scriptableEvent in _scriptableEventsToListen)
+        {
+            scriptableEvent.AddListener(this);
         }
     }
 
@@ -283,21 +311,22 @@ public class VoidEventListener : BaseEventListener
 [System.Serializable]
 public class VoidEventListenerScriptable : BaseScriptableEventListener
 {
+
 }
 
-public abstract class BaseEventListener<T> : IEventListener<T>
+public abstract class BaseEventListener<T> : IEventListenerData<T>, IEventListenerInvoker<T>, IEventListenerLogic<T>
 {
     #region Members
 
     [SerializeField]
-    protected UnityEvent<T> _listenerEvents = new UnityEvent<T>();
+    protected UnityEvent<T> _actions = new();
 
-    public UnityEvent<T> Actions => _listenerEvents;
+    public UnityEvent<T> Actions { get => _actions; }
 
-    [SerializeField]
-    protected List<IEvent<T>> _eventsToListen = new();
+    [SerializeReference, SubclassSelector]
+    protected List<IEventLogic<T>> _eventsToListen = new();
 
-    public virtual List<IEvent<T>> EventsToListen => _eventsToListen;
+    public virtual List<IEventLogic<T>> EventsToListen => _eventsToListen;
 
     #endregion
 
@@ -305,7 +334,7 @@ public abstract class BaseEventListener<T> : IEventListener<T>
 
     public void OnInvoke(T data)
     {
-        _listenerEvents?.Invoke(data);
+        Actions?.Invoke(data);
     }
 
     public void Subscribe()
@@ -324,20 +353,20 @@ public abstract class BaseEventListener<T> : IEventListener<T>
         }
     }
 
-    public void AddEventToListen(IEvent<T> baseEvent, bool updateSubscription = false)
+    public void AddEventToListen(IEventLogic<T> eventLogic, bool updateSubscription = false)
     {
-        _eventsToListen.Add(baseEvent);
+        _eventsToListen.Add(eventLogic);
 
         if (updateSubscription)
-            baseEvent.AddListener(this);
+            eventLogic.AddListener(this);
     }
 
-    public void RemoveEventToLister(IEvent<T> baseEvent, bool updateSubscription = false)
+    public void RemoveEventToLister(IEventLogic<T> eventLogic, bool updateSubscription = false)
     {
-        _eventsToListen.Remove(baseEvent);
+        _eventsToListen.Remove(eventLogic);
 
         if (updateSubscription)
-            baseEvent.RemoveListener(this);
+            eventLogic.RemoveListener(this);
     }
 
     #endregion

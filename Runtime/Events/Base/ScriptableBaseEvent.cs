@@ -2,45 +2,48 @@ using MSS.ScriptableEvents;
 using UnityEngine;
 
 [System.Serializable]
-public abstract class ScriptableBaseEvent : ScriptableObject
+public abstract class ScriptableBaseEvent : ScriptableObject, IEventLogic, IEventInvoker
 {
-    public abstract IEvent Event { get; }
+    public abstract IEventLogic EventLogic { get; }
+    public abstract IEventInvoker EventInvoker { get; }
 
-    [MethodButton]
+    [Sirenix.OdinInspector.Button]
     public void Invoke()
     {
-        Event.Invoke();
+        EventInvoker.Invoke();
     }
 
-    public void AddListener(IEventListener listener)
+    public void AddListener(IEventListenerInvoker listener)
     {
-        Event.AddListener(listener);
+        EventLogic.AddListener(listener);
     }
 
-    public void RemoveListener(IEventListener listener)
+    public void RemoveListener(IEventListenerInvoker listener)
     {
-        Event.RemoveListener(listener);
+        EventLogic.RemoveListener(listener);
     }
 }
 
 [System.Serializable]
-public abstract class ScriptableBaseEvent<T> : ScriptableObject
+public abstract class ScriptableBaseEvent<T> : ScriptableObject, IEventLogic<T>, IEventInvoker<T>
 {
-    public abstract IEvent<T> Event { get; }
+    public abstract IEventLogic<T> EventLogic { get; }
+    public abstract IEventInvoker<T> EventInvoker { get; }
 
+    [Sirenix.OdinInspector.Button]
     public void Invoke(T data)
     {
-        Event.Invoke(data);
+        EventInvoker.Invoke(data);
     }
 
-    public void AddListener(IEventListener<T> listener)
+    public void AddListener(IEventListenerInvoker<T> listener)
     {
-        Event.AddListener(listener);
+        EventLogic.AddListener(listener);
     }
 
-    public void RemoveListener(IEventListener<T> listener)
+    public void RemoveListener(IEventListenerInvoker<T> listener)
     {
-        Event.RemoveListener(listener);
+        EventLogic.RemoveListener(listener);
     }
 }
 
@@ -49,7 +52,7 @@ public abstract class ScriptableBaseEvent<T> : ScriptableObject
 public abstract class ScriptableBaseListener : ScriptableObject
 {
     public bool ActiveInEditor = false;
-    public abstract IScriptableEventListener Listener { get; }
+    public abstract IEventListenerInvoker Listener { get; }
 
 #if UNITY_EDITOR
     private void Awake()
@@ -59,11 +62,6 @@ public abstract class ScriptableBaseListener : ScriptableObject
         if (Application.isEditor && !Application.isPlaying)
             if (ActiveInEditor)
             {
-                if (!Listener.AreEventsSynched())
-                {
-                    Listener.ForceSyncEvents();
-                }
-
                 Listener.UnSubscribe();
                 Listener.Subscribe();
             }
@@ -80,29 +78,8 @@ public abstract class ScriptableBaseListener : ScriptableObject
         if (Application.isEditor && !Application.isPlaying)
             if (ActiveInEditor)
             {
-                if (!Listener.AreEventsSynched())
-                {
-                    Listener.ForceSyncEvents();
-                }
-
                 Listener.UnSubscribe();
                 Listener.Subscribe();
-            }
-    }
-
-    private void OnValidate()
-    {
-        Debug.LogError("Here OnValidate");
-        Debug.LogError($"Application.isEditor : {Application.isEditor}");
-        Debug.LogError($"!Application.isPlaying : {!Application.isPlaying}");
-
-        if (Application.isEditor && !Application.isPlaying)
-            if (ActiveInEditor)
-            {
-                if (!Listener.AreEventsSynched())
-                {
-                    Listener.ForceSyncEvents();
-                }
             }
     }
 
@@ -113,6 +90,38 @@ public abstract class ScriptableBaseListener : ScriptableObject
 [System.Serializable]
 public abstract class ScriptableBaseListener<T> : ScriptableObject
 {
-    public abstract IScriptableEventListener<T> Listener { get; }
+    public bool ActiveInEditor = false;
+    public abstract IEventListenerInvoker<T> Listener { get; }
+
+#if UNITY_EDITOR
+    private void Awake()
+    {
+        Debug.LogError("Here Awake");
+
+        if (Application.isEditor && !Application.isPlaying)
+            if (ActiveInEditor)
+            {
+                Listener.UnSubscribe();
+                Listener.Subscribe();
+            }
+
+    }
+
+    private void OnEnable()
+    {
+        Debug.LogError("Here OnEnable");
+        Debug.LogError($"Application.isEditor : {Application.isEditor}");
+        Debug.LogError($"!Application.isPlaying : {!Application.isPlaying}");
+
+
+        if (Application.isEditor && !Application.isPlaying)
+            if (ActiveInEditor)
+            {
+                Listener.UnSubscribe();
+                Listener.Subscribe();
+            }
+    }
+
+#endif
 }
 
