@@ -98,14 +98,19 @@ public class SubclassSelectorDrawer : PropertyDrawer
         var fieldInfo = parentType.GetField(propertyPaths[0], bindingAttr);
         var fieldType = fieldInfo.FieldType;
 
+        foreach (var propertyPath in propertyPaths)
+            Debug.LogError(propertyPath);
+
+        Debug.LogError($"propertyPaths : {propertyPaths}");
         if (propertyPaths.Contains("Array"))
         {
+            Debug.LogError($"fieldType.IsArray : {fieldType.IsArray}");
             if (fieldType.IsArray)
             {
                 var elementType = fieldType.GetElementType();
                 return elementType;
             }
-            else
+            else if (fieldType.IsGenericType)
             {
                 var genericArguments = fieldType.GetGenericArguments();
                 var elementType = genericArguments[0];

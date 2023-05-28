@@ -48,7 +48,65 @@ public abstract class ScriptableBaseEvent<T> : ScriptableObject
 [System.Serializable]
 public abstract class ScriptableBaseListener : ScriptableObject
 {
+    public bool ActiveInEditor = false;
     public abstract IScriptableEventListener Listener { get; }
+
+#if UNITY_EDITOR
+    private void Awake()
+    {
+        Debug.LogError("Here Awake");
+
+        if (Application.isEditor && !Application.isPlaying)
+            if (ActiveInEditor)
+            {
+                if (!Listener.AreEventsSynched())
+                {
+                    Listener.ForceSyncEvents();
+                }
+
+                Listener.UnSubscribe();
+                Listener.Subscribe();
+            }
+
+    }
+
+    private void OnEnable()
+    {
+        Debug.LogError("Here OnEnable");
+        Debug.LogError($"Application.isEditor : {Application.isEditor}");
+        Debug.LogError($"!Application.isPlaying : {!Application.isPlaying}");
+
+
+        if (Application.isEditor && !Application.isPlaying)
+            if (ActiveInEditor)
+            {
+                if (!Listener.AreEventsSynched())
+                {
+                    Listener.ForceSyncEvents();
+                }
+
+                Listener.UnSubscribe();
+                Listener.Subscribe();
+            }
+    }
+
+    private void OnValidate()
+    {
+        Debug.LogError("Here OnValidate");
+        Debug.LogError($"Application.isEditor : {Application.isEditor}");
+        Debug.LogError($"!Application.isPlaying : {!Application.isPlaying}");
+
+        if (Application.isEditor && !Application.isPlaying)
+            if (ActiveInEditor)
+            {
+                if (!Listener.AreEventsSynched())
+                {
+                    Listener.ForceSyncEvents();
+                }
+            }
+    }
+
+#endif
 }
 
 

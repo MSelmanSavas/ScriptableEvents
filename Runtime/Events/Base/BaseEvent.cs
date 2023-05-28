@@ -34,6 +34,8 @@ namespace MSS.ScriptableEvents
     public interface IScriptableEventListener : IEventListener
     {
         List<ScriptableBaseEvent> ScriptableEventsToListen { get; }
+        bool AreEventsSynched();
+        void ForceSyncEvents();
         void AddScriptableEventToListen(ScriptableBaseEvent scriptableBaseEvent, bool updateSubscription = false);
         void RemoveScriptableEventToLister(ScriptableBaseEvent scriptableBaseEvent, bool updateSubscription = false);
     }
@@ -52,6 +54,8 @@ namespace MSS.ScriptableEvents
     public interface IScriptableEventListener<T> : IEventListener<T>
     {
         List<ScriptableBaseEvent<T>> ScriptableEventsToListen { get; }
+        bool AreEventsSynched();
+        void ForceSyncEvents();
         void AddScriptableEventToListen(ScriptableBaseEvent<T> scriptableBaseEvent, bool updateSubscription = false);
         void RemoveScriptableEventToLister(ScriptableBaseEvent<T> scriptableBaseEvent, bool updateSubscription = false);
     }
@@ -133,7 +137,7 @@ public abstract class BaseEventListener : IEventListener
 
     public UnityEvent Actions { get => _actions; }
 
-    [SerializeReference]
+    [SerializeReference, SubclassSelector]
     protected List<IEvent> _eventsToListen = new();
 
     public virtual List<IEvent> EventsToListen => _eventsToListen;
@@ -237,6 +241,35 @@ public abstract class BaseScriptableEventListener : BaseEventListener, IScriptab
 
         if (updateSubscription)
             scriptableBaseEvent.Event.RemoveListener(this);
+    }
+
+    public bool AreEventsSynched()
+    {
+        List<IEvent> events = EventsToListen;
+
+        if (events == null)
+            return false;
+
+        if (events.Count != _scriptableEventsToListen.Count)
+            return false;
+
+        for (int i = 0; i < events.Count; i++)
+        {
+            if (events[i] != _scriptableEventsToListen[i].Event)
+                return false;
+        }
+
+        return true;
+    }
+
+    public void ForceSyncEvents()
+    {
+        _eventsToListen.Clear();
+
+        foreach (var scriptableEvent in _scriptableEventsToListen)
+        {
+            _eventsToListen.Add(scriptableEvent.Event);
+        }
     }
 
     #endregion
@@ -363,6 +396,36 @@ public abstract class BaseScriptableEventListener<T> : BaseEventListener<T>, ISc
 
         if (updateSubscription)
             scriptableBaseEvent.Event.RemoveListener(this);
+    }
+
+
+    public bool AreEventsSynched()
+    {
+        List<IEvent<T>> events = EventsToListen;
+
+        if (events == null)
+            return false;
+
+        if (events.Count != _scriptableEventsToListen.Count)
+            return false;
+
+        for (int i = 0; i < events.Count; i++)
+        {
+            if (events[i] != _scriptableEventsToListen[i].Event)
+                return false;
+        }
+
+        return true;
+    }
+
+    public void ForceSyncEvents()
+    {
+        _eventsToListen.Clear();
+
+        foreach (var scriptableEvent in _scriptableEventsToListen)
+        {
+            AddEventToListen(scriptableEvent.Event);
+        }
     }
 
     #endregion

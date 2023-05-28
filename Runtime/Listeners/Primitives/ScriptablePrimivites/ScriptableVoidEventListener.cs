@@ -9,8 +9,8 @@ public class ScriptableVoidEventListener : ScriptableBaseListener
     VoidEventListenerScriptable _listener = new();
     public override IScriptableEventListener Listener => _listener;
 
-    public void Ass()
+    public void Test()
     {
-        Debug.LogError("Ass");
+        Debug.LogError("Here test 122231");
     }
 }
