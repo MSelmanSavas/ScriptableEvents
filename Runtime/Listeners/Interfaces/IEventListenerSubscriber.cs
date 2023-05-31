@@ -1,6 +1,6 @@
 namespace MSS.ScriptableEvents
 {
-    public interface IEventListenerSubsriber
+    public interface IEventListenerSubscriber
     {
         void Subscribe();
         void UnSubscribe();

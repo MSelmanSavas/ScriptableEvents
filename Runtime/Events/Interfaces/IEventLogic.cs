@@ -2,14 +2,14 @@ namespace MSS.ScriptableEvents
 {
     public interface IEventLogic
     {
-        void AddListener(IEventInvoker listener);
-        void RemoveListener(IEventInvoker listener);
+        void AddListener(IEventListenerInvoker listener);
+        void RemoveListener(IEventListenerInvoker listener);
     }
 
     public interface IEventLogic<T>
     {
-        void AddListener(IEventInvoker<T> listener);
-        void RemoveListener(IEventInvoker<T> listener);
+        void AddListener(IEventListenerInvoker<T> listener);
+        void RemoveListener(IEventListenerInvoker<T> listener);
     }
 
 }

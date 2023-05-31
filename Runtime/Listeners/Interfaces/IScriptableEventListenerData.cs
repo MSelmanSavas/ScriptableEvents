@@ -6,11 +6,11 @@ namespace MSS.ScriptableEvents
     public interface IScriptableEventListenerData
     {
         UnityEvent Actions { get; }
-        List<ScriptableBaseEvent> ScriptableEventsToListen { get; }
+        List<BaseScriptableEvent> ScriptableEventsToListen { get; }
     }
     public interface IScriptableEventListenerData<T>
     {
         UnityEvent<T> Actions { get; }
-        List<ScriptableBaseEvent<T>> ScriptableEventsToListen { get; }
+        List<BaseScriptableEvent<T>> ScriptableEventsToListen { get; }
     }
 }

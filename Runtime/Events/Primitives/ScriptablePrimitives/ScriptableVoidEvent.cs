@@ -1,8 +1,9 @@
 using MSS.ScriptableEvents;
 using UnityEngine;
 
+[System.Serializable]
 [CreateAssetMenu(fileName = "NewVoidEvent", menuName = "ScriptableEvents/Events/Create VoidEvent")]
-public class ScriptableVoidEvent : ScriptableBaseEvent
+public class ScriptableVoidEvent : BaseScriptableEvent
 {
     [SerializeField]
     protected VoidEvent _voidEvent = new();
