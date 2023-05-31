@@ -7,7 +7,7 @@ namespace MSS.ScriptableEvents.Editor
 #if ODIN_INSPECTOR
 
     [UnityEditor.CustomEditor(typeof(BaseScriptableEvent), editorForChildClasses: true)]
-    public class ScriptableBaseEventDrawer : Sirenix.OdinInspector.Editor.OdinEditor
+    public class BaseScriptableEventDrawer : Sirenix.OdinInspector.Editor.OdinEditor
     {
         public override void OnInspectorGUI()
         {
@@ -30,7 +30,7 @@ namespace MSS.ScriptableEvents.Editor
 #elif !ODIN_INSPECTOR
 
     [UnityEditor.CustomEditor(typeof(BaseScriptableEvent), editorForChildClasses: true)]
-    public class ScriptableBaseEventDrawer : UnityEditor.Editor
+    public class BaseScriptableEventDrawer : UnityEditor.Editor
     {
         public override void OnInspectorGUI()
         {
@@ -43,7 +43,7 @@ namespace MSS.ScriptableEvents.Editor
             }
         }
     }
-    
+
 #endif
 }
 

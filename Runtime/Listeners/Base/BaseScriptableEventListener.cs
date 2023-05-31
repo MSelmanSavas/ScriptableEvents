@@ -5,7 +5,11 @@ using UnityEngine.Events;
 namespace MSS.ScriptableEvents
 {
     [System.Serializable]
-    public abstract class BaseScriptableEventListener : ScriptableObject, IScriptableEventListenerData, IScriptableEventListenerLogic, IEventListenerSubscriber, IEventListenerInvoker
+    public abstract class BaseScriptableEventListener : ScriptableObject,
+                                                            IScriptableEventListenerData,
+                                                            IScriptableEventListenerLogic,
+                                                            IEventListenerSubscriber,
+                                                            IEventListenerInvoker
     {
         #region Members
 
@@ -72,14 +76,18 @@ namespace MSS.ScriptableEvents
         {
             foreach (var scriptableEvent in _scriptableEventsToListen)
             {
-                scriptableEvent.AddListener(this);
+                scriptableEvent.RemoveListener(this);
             }
         }
 
         #endregion
     }
 
-    public abstract class BaseScriptableEventListener<T> : ScriptableObject, IScriptableEventListenerData<T>, IScriptableEventListenerLogic<T>, IEventListenerSubscriber, IEventListenerInvoker<T>
+    public abstract class BaseScriptableEventListener<T> : ScriptableObject,
+                                                            IScriptableEventListenerData<T>,
+                                                            IScriptableEventListenerLogic<T>,
+                                                            IEventListenerSubscriber,
+                                                            IEventListenerInvoker<T>
     {
         #region Members
 
@@ -145,7 +153,7 @@ namespace MSS.ScriptableEvents
         {
             foreach (var scriptableEvent in _scriptableEventsToListen)
             {
-                scriptableEvent.AddListener(this);
+                scriptableEvent.RemoveListener(this);
             }
         }
 

@@ -4,11 +4,11 @@ namespace MSS.ScriptableEvents
 {
     public interface IEventData
     {
-        public UnityAction Action { get; }
+        public UnityEvent Action { get; }
     }
 
     public interface IEventData<T>
     {
-        public UnityAction<T> Action { get; }
+        public UnityEvent<T> Action { get; }
     }
 }

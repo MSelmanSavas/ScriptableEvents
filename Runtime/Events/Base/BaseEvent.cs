@@ -12,9 +12,9 @@ namespace MSS.ScriptableEvents
         [Sirenix.OdinInspector.ShowInInspector]
 #endif
         [SerializeField]
-        protected event UnityAction _onInvoke;
+        protected UnityEvent _onInvoke = new();
 
-        public UnityAction Action => _onInvoke;
+        public UnityEvent Action => _onInvoke;
 
         #endregion
 
@@ -33,7 +33,7 @@ namespace MSS.ScriptableEvents
 #endif
         public void AddListener(IEventListenerInvoker listener)
         {
-            _onInvoke += listener.OnInvoked;
+            _onInvoke.AddListener(listener.OnInvoked);
         }
 
 #if ODIN_INSPECTOR
@@ -41,7 +41,7 @@ namespace MSS.ScriptableEvents
 #endif
         public void RemoveListener(IEventListenerInvoker listener)
         {
-            _onInvoke -= listener.OnInvoked;
+            _onInvoke.RemoveListener(listener.OnInvoked);
         }
 
         #endregion
@@ -56,9 +56,9 @@ namespace MSS.ScriptableEvents
         [Sirenix.OdinInspector.ShowInInspector]
 #endif
         [SerializeField]
-        protected event UnityAction<T> _onInvoke;
+        protected UnityEvent<T> _onInvoke = new();
 
-        public UnityAction<T> Action => _onInvoke;
+        public UnityEvent<T> Action => _onInvoke;
 
         #endregion
 
@@ -77,7 +77,7 @@ namespace MSS.ScriptableEvents
 #endif
         public void AddListener(IEventListenerInvoker<T> listener)
         {
-            _onInvoke += listener.OnInvoked;
+            _onInvoke.AddListener(listener.OnInvoked);
         }
 
 #if ODIN_INSPECTOR
@@ -85,7 +85,7 @@ namespace MSS.ScriptableEvents
 #endif
         public void RemoveListener(IEventListenerInvoker<T> listener)
         {
-            _onInvoke -= listener.OnInvoked;
+            _onInvoke.RemoveListener(listener.OnInvoked);
         }
 
         #endregion

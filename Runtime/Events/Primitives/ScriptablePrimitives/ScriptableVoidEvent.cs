@@ -2,7 +2,7 @@ using MSS.ScriptableEvents;
 using UnityEngine;
 
 [System.Serializable]
-[CreateAssetMenu(fileName = "NewVoidEvent", menuName = "ScriptableEvents/Events/Create VoidEvent")]
+[CreateAssetMenu(fileName = "NewVoidEvent", menuName = "ScriptableEvents/Events/Create Void Event")]
 public class ScriptableVoidEvent : BaseScriptableEvent
 {
     [SerializeField]
