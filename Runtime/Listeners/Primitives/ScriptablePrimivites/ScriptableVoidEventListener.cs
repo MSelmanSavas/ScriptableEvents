@@ -7,7 +7,7 @@ public class ScriptableVoidEventListener : ScriptableBaseListener
 {
     [SerializeField]
     VoidEventListenerScriptable _listener = new();
-    public override IScriptableEventListener Listener => _listener;
+    public override IEventListenerSubsriber Listener => _listener;
 
     public void Test()
     {

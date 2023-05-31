@@ -6,5 +6,7 @@ public class ScriptableVoidEvent : ScriptableBaseEvent
 {
     [SerializeField]
     protected VoidEvent _voidEvent = new();
-    public override IEvent Event => _voidEvent;
+
+    public override IEventLogic EventLogic => _voidEvent;
+    public override IEventInvoker EventInvoker => _voidEvent;
 }

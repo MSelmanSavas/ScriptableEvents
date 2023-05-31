@@ -13,12 +13,12 @@ public abstract class ScriptableBaseEvent : ScriptableObject, IEventLogic, IEven
         EventInvoker.Invoke();
     }
 
-    public void AddListener(IEventListenerInvoker listener)
+    public void AddListener(IEventInvoker listener)
     {
         EventLogic.AddListener(listener);
     }
 
-    public void RemoveListener(IEventListenerInvoker listener)
+    public void RemoveListener(IEventInvoker listener)
     {
         EventLogic.RemoveListener(listener);
     }
@@ -36,12 +36,12 @@ public abstract class ScriptableBaseEvent<T> : ScriptableObject, IEventLogic<T>,
         EventInvoker.Invoke(data);
     }
 
-    public void AddListener(IEventListenerInvoker<T> listener)
+    public void AddListener(IEventInvoker<T> listener)
     {
         EventLogic.AddListener(listener);
     }
 
-    public void RemoveListener(IEventListenerInvoker<T> listener)
+    public void RemoveListener(IEventInvoker<T> listener)
     {
         EventLogic.RemoveListener(listener);
     }
@@ -52,13 +52,11 @@ public abstract class ScriptableBaseEvent<T> : ScriptableObject, IEventLogic<T>,
 public abstract class ScriptableBaseListener : ScriptableObject
 {
     public bool ActiveInEditor = false;
-    public abstract IEventListenerInvoker Listener { get; }
+    public abstract IEventListenerSubsriber Listener { get; }
 
 #if UNITY_EDITOR
     private void Awake()
     {
-        Debug.LogError("Here Awake");
-
         if (Application.isEditor && !Application.isPlaying)
             if (ActiveInEditor)
             {
@@ -70,11 +68,6 @@ public abstract class ScriptableBaseListener : ScriptableObject
 
     private void OnEnable()
     {
-        Debug.LogError("Here OnEnable");
-        Debug.LogError($"Application.isEditor : {Application.isEditor}");
-        Debug.LogError($"!Application.isPlaying : {!Application.isPlaying}");
-
-
         if (Application.isEditor && !Application.isPlaying)
             if (ActiveInEditor)
             {
@@ -91,13 +84,11 @@ public abstract class ScriptableBaseListener : ScriptableObject
 public abstract class ScriptableBaseListener<T> : ScriptableObject
 {
     public bool ActiveInEditor = false;
-    public abstract IEventListenerInvoker<T> Listener { get; }
+    public abstract IEventListenerSubsriber Listener { get; }
 
 #if UNITY_EDITOR
     private void Awake()
     {
-        Debug.LogError("Here Awake");
-
         if (Application.isEditor && !Application.isPlaying)
             if (ActiveInEditor)
             {
@@ -109,11 +100,6 @@ public abstract class ScriptableBaseListener<T> : ScriptableObject
 
     private void OnEnable()
     {
-        Debug.LogError("Here OnEnable");
-        Debug.LogError($"Application.isEditor : {Application.isEditor}");
-        Debug.LogError($"!Application.isPlaying : {!Application.isPlaying}");
-
-
         if (Application.isEditor && !Application.isPlaying)
             if (ActiveInEditor)
             {
