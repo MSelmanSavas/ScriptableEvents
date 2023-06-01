@@ -14,32 +14,23 @@ namespace MSS.ScriptableEvents
         [SerializeField]
         protected UnityEvent _onInvoke = new();
 
-        public UnityEvent Action => _onInvoke;
+        public virtual UnityEvent Action => _onInvoke;
 
         #endregion
 
         #region Public Methods
 
-#if ODIN_INSPECTOR
-        [Sirenix.OdinInspector.Button]
-#endif
-        public void Invoke()
+        public virtual void Invoke()
         {
             _onInvoke?.Invoke();
         }
 
-#if ODIN_INSPECTOR
-        [Sirenix.OdinInspector.Button]
-#endif
-        public void AddListener(IEventListenerInvoker listener)
+        public virtual void AddListener(IEventListenerInvoker listener)
         {
             _onInvoke.AddListener(listener.OnInvoked);
         }
 
-#if ODIN_INSPECTOR
-        [Sirenix.OdinInspector.Button]
-#endif
-        public void RemoveListener(IEventListenerInvoker listener)
+        public virtual void RemoveListener(IEventListenerInvoker listener)
         {
             _onInvoke.RemoveListener(listener.OnInvoked);
         }
@@ -58,32 +49,23 @@ namespace MSS.ScriptableEvents
         [SerializeField]
         protected UnityEvent<T> _onInvoke = new();
 
-        public UnityEvent<T> Action => _onInvoke;
+        public virtual UnityEvent<T> Action => _onInvoke;
 
         #endregion
 
         #region Public Methods
 
-#if ODIN_INSPECTOR
-        [Sirenix.OdinInspector.Button]
-#endif
-        public void Invoke(T data)
+        public virtual void Invoke(T data)
         {
             _onInvoke?.Invoke(data);
         }
 
-#if ODIN_INSPECTOR
-        [Sirenix.OdinInspector.Button]
-#endif
-        public void AddListener(IEventListenerInvoker<T> listener)
+        public virtual void AddListener(IEventListenerInvoker<T> listener)
         {
             _onInvoke.AddListener(listener.OnInvoked);
         }
 
-#if ODIN_INSPECTOR
-        [Sirenix.OdinInspector.Button]
-#endif
-        public void RemoveListener(IEventListenerInvoker<T> listener)
+        public virtual void RemoveListener(IEventListenerInvoker<T> listener)
         {
             _onInvoke.RemoveListener(listener.OnInvoked);
         }

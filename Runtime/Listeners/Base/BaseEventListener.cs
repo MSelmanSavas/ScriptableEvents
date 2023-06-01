@@ -12,9 +12,11 @@ namespace MSS.ScriptableEvents
         [SerializeField]
         protected UnityEvent _actions = new();
 
-        public UnityEvent Actions { get => _actions; }
+        public virtual UnityEvent Actions { get => _actions; }
 
-        [SerializeReference, SubclassSelector]
+#if ODIN_INSPECTOR
+        [Sirenix.OdinInspector.ShowInInspector]
+#endif
         protected List<IEventLogic> _eventsToListen = new();
 
         public virtual List<IEventLogic> EventsToListen => _eventsToListen;
@@ -23,12 +25,12 @@ namespace MSS.ScriptableEvents
 
         #region Public Methods
 
-        public void OnInvoked()
+        public virtual void OnInvoked()
         {
             _actions?.Invoke();
         }
 
-        public void Subscribe()
+        public virtual void Subscribe()
         {
             foreach (var events in EventsToListen)
             {
@@ -36,7 +38,7 @@ namespace MSS.ScriptableEvents
             }
         }
 
-        public void UnSubscribe()
+        public virtual void UnSubscribe()
         {
             foreach (var events in EventsToListen)
             {
@@ -44,7 +46,7 @@ namespace MSS.ScriptableEvents
             }
         }
 
-        public void AddEventToListen(IEventLogic eventLogic, bool updateSubscription = false)
+        public virtual void AddEventToListen(IEventLogic eventLogic, bool updateSubscription = false)
         {
             _eventsToListen.Add(eventLogic);
 
@@ -52,7 +54,7 @@ namespace MSS.ScriptableEvents
                 eventLogic.AddListener(this);
         }
 
-        public void RemoveEventToLister(IEventLogic eventLogic, bool updateSubscription = false)
+        public virtual void RemoveEventToListen(IEventLogic eventLogic, bool updateSubscription = false)
         {
             _eventsToListen.Remove(eventLogic);
 
@@ -63,6 +65,7 @@ namespace MSS.ScriptableEvents
         #endregion
     }
 
+    [System.Serializable]
     public abstract class BaseEventListener<T> : IEventListenerData<T>, IEventListenerSubscriber, IEventListenerLogic<T>, IEventListenerInvoker<T>
     {
         #region Members
@@ -70,9 +73,11 @@ namespace MSS.ScriptableEvents
         [SerializeField]
         protected UnityEvent<T> _actions = new();
 
-        public UnityEvent<T> Actions { get => _actions; }
+        public virtual UnityEvent<T> Actions { get => _actions; }
 
-        [SerializeReference, SubclassSelector]
+#if ODIN_INSPECTOR
+        [Sirenix.OdinInspector.ShowInInspector]
+#endif
         protected List<IEventLogic<T>> _eventsToListen = new();
 
         public virtual List<IEventLogic<T>> EventsToListen => _eventsToListen;
@@ -81,12 +86,12 @@ namespace MSS.ScriptableEvents
 
         #region Public Methods
 
-        public void OnInvoked(T data)
+        public virtual void OnInvoked(T data)
         {
             Actions?.Invoke(data);
         }
 
-        public void Subscribe()
+        public virtual void Subscribe()
         {
             foreach (var events in EventsToListen)
             {
@@ -94,7 +99,7 @@ namespace MSS.ScriptableEvents
             }
         }
 
-        public void UnSubscribe()
+        public virtual void UnSubscribe()
         {
             foreach (var events in EventsToListen)
             {
@@ -102,7 +107,7 @@ namespace MSS.ScriptableEvents
             }
         }
 
-        public void AddEventToListen(IEventLogic<T> eventLogic, bool updateSubscription = false)
+        public virtual void AddEventToListen(IEventLogic<T> eventLogic, bool updateSubscription = false)
         {
             _eventsToListen.Add(eventLogic);
 
@@ -110,7 +115,7 @@ namespace MSS.ScriptableEvents
                 eventLogic.AddListener(this);
         }
 
-        public void RemoveEventToLister(IEventLogic<T> eventLogic, bool updateSubscription = false)
+        public virtual void RemoveEventToListen(IEventLogic<T> eventLogic, bool updateSubscription = false)
         {
             _eventsToListen.Remove(eventLogic);
 

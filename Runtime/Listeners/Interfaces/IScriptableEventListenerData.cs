@@ -5,12 +5,12 @@ namespace MSS.ScriptableEvents
 {
     public interface IScriptableEventListenerData
     {
-        UnityEvent Actions { get; }
+        UnityEvent OnInvokedActions { get; }
         List<BaseScriptableEvent> ScriptableEventsToListen { get; }
     }
     public interface IScriptableEventListenerData<T>
     {
-        UnityEvent<T> Actions { get; }
+        UnityEvent<T> OnInvokedActions { get; }
         List<BaseScriptableEvent<T>> ScriptableEventsToListen { get; }
     }
 }

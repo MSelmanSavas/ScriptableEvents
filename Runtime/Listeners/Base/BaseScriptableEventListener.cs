@@ -8,18 +8,29 @@ namespace MSS.ScriptableEvents
     public abstract class BaseScriptableEventListener : ScriptableObject,
                                                             IScriptableEventListenerData,
                                                             IScriptableEventListenerLogic,
-                                                            IEventListenerSubscriber,
-                                                            IEventListenerInvoker
+                                                            IScriptableEventListenerSubscriber,
+                                                            IScriptableEventListenerInvoker
     {
         #region Members
+
+#if UNITY_EDITOR
+        #region Only Editor Fields and Methods
+
+#if ODIN_INSPECTOR
+        [Sirenix.OdinInspector.ShowInInspector]
+#endif
+        protected bool showEditorUtilities;
+
+        #endregion
+#endif
 
 #if ODIN_INSPECTOR
         [Sirenix.OdinInspector.ShowInInspector]
 #endif
         [SerializeField]
-        protected UnityEvent _actions = new();
+        protected UnityEvent _onInvokedActions = new();
 
-        public UnityEvent Actions { get => _actions; }
+        public UnityEvent OnInvokedActions { get => _onInvokedActions; }
 
 
 #if ODIN_INSPECTOR
@@ -51,14 +62,16 @@ namespace MSS.ScriptableEvents
         }
 
 #if ODIN_INSPECTOR
+        [Sirenix.OdinInspector.ShowIf("ShowEditorUtilities")]
         [Sirenix.OdinInspector.Button]
 #endif
         public void OnInvoked()
         {
-            Actions?.Invoke();
+            OnInvokedActions?.Invoke();
         }
 
 #if ODIN_INSPECTOR
+        [Sirenix.OdinInspector.ShowIf("ShowEditorUtilities")]
         [Sirenix.OdinInspector.Button]
 #endif
         public void Subscribe()
@@ -70,6 +83,7 @@ namespace MSS.ScriptableEvents
         }
 
 #if ODIN_INSPECTOR
+        [Sirenix.OdinInspector.ShowIf("ShowEditorUtilities")]
         [Sirenix.OdinInspector.Button]
 #endif
         public void UnSubscribe()
@@ -80,24 +94,74 @@ namespace MSS.ScriptableEvents
             }
         }
 
+#if UNITY_EDITOR
+
+#if ODIN_INSPECTOR
+        [Sirenix.OdinInspector.ShowIf("ShowEditorUtilities")]
+        [Sirenix.OdinInspector.Button]
+#endif
+        public void SubscribePersistent()
+        {
+            foreach (var scriptableEvent in _scriptableEventsToListen)
+            {
+                scriptableEvent.AddPersistentListener(this);
+            }
+        }
+
+#if ODIN_INSPECTOR
+        [Sirenix.OdinInspector.ShowIf("ShowEditorUtilities")]
+        [Sirenix.OdinInspector.Button]
+#endif
+        public void UnSubscribePersistent()
+        {
+            foreach (var scriptableEvent in _scriptableEventsToListen)
+            {
+                scriptableEvent.RemovePersistentListener(this);
+            }
+        }
+#endif
+
         #endregion
     }
 
     public abstract class BaseScriptableEventListener<T> : ScriptableObject,
                                                             IScriptableEventListenerData<T>,
                                                             IScriptableEventListenerLogic<T>,
-                                                            IEventListenerSubscriber,
-                                                            IEventListenerInvoker<T>
+                                                            IScriptableEventListenerSubscriber,
+                                                            IScriptableEventListenerInvoker<T>
     {
         #region Members
+
+#if UNITY_EDITOR
+        #region Only Editor Fields and Methods
+
+
+#if ODIN_INSPECTOR
+        [Sirenix.OdinInspector.ShowInInspector]
+#endif
+        protected bool showEditorUtilities;
+
+        [SerializeField]
+        [HideInInspector]
+        protected T editorData;
+
+        public virtual void InvokeForEditor()
+        {
+            OnInvokedActions?.Invoke(editorData);
+        }
+
+        #endregion
+#endif
+
 
 #if ODIN_INSPECTOR
         [Sirenix.OdinInspector.ShowInInspector]
 #endif
         [SerializeField]
-        protected UnityEvent<T> _actions = new();
+        protected UnityEvent<T> _onInvokedActions = new();
 
-        public UnityEvent<T> Actions { get => _actions; }
+        public UnityEvent<T> OnInvokedActions { get => _onInvokedActions; }
+
 
 #if ODIN_INSPECTOR
         [Sirenix.OdinInspector.ShowInInspector]
@@ -128,14 +192,16 @@ namespace MSS.ScriptableEvents
         }
 
 #if ODIN_INSPECTOR
+        [Sirenix.OdinInspector.ShowIf("showEditorUtilities")]
         [Sirenix.OdinInspector.Button]
 #endif
         public void OnInvoked(T data)
         {
-            Actions?.Invoke(data);
+            OnInvokedActions?.Invoke(data);
         }
 
 #if ODIN_INSPECTOR
+        [Sirenix.OdinInspector.ShowIf("showEditorUtilities")]
         [Sirenix.OdinInspector.Button]
 #endif
         public void Subscribe()
@@ -147,6 +213,7 @@ namespace MSS.ScriptableEvents
         }
 
 #if ODIN_INSPECTOR
+        [Sirenix.OdinInspector.ShowIf("showEditorUtilities")]
         [Sirenix.OdinInspector.Button]
 #endif
         public void UnSubscribe()
@@ -156,6 +223,33 @@ namespace MSS.ScriptableEvents
                 scriptableEvent.RemoveListener(this);
             }
         }
+
+#if UNITY_EDITOR
+
+#if ODIN_INSPECTOR
+        [Sirenix.OdinInspector.ShowIf("showEditorUtilities")]
+        [Sirenix.OdinInspector.Button]
+#endif
+        public void SubscribePersistent()
+        {
+            foreach (var scriptableEvent in _scriptableEventsToListen)
+            {
+                scriptableEvent.AddPersistentListener(this);
+            }
+        }
+
+#if ODIN_INSPECTOR
+        [Sirenix.OdinInspector.ShowIf("showEditorUtilities")]
+        [Sirenix.OdinInspector.Button]
+#endif
+        public void UnSubscribePersistent()
+        {
+            foreach (var scriptableEvent in _scriptableEventsToListen)
+            {
+                scriptableEvent.RemovePersistentListener(this);
+            }
+        }
+#endif
 
         #endregion
     }

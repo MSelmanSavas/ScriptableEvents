@@ -2,7 +2,7 @@ using MSS.ScriptableEvents;
 using UnityEngine;
 
 [System.Serializable]
-[CreateAssetMenu(fileName = "NewVoidListener", menuName = "ScriptableEvents/Listeners/Create VoidListener")]
+[CreateAssetMenu(fileName = "NewVoidListener", menuName = "ScriptableEvents/Listeners/Create Void Listener")]
 public class ScriptableVoidEventListener : BaseScriptableEventListener
 {
     public void Test()

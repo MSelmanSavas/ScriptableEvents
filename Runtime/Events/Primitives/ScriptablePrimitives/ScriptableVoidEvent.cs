@@ -10,4 +10,5 @@ public class ScriptableVoidEvent : BaseScriptableEvent
 
     public override IEventLogic EventLogic => _voidEvent;
     public override IEventInvoker EventInvoker => _voidEvent;
+    public override IEventData EventData => _voidEvent;
 }
