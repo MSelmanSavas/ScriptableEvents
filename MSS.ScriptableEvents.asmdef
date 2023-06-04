@@ -1,0 +1,14 @@
+{
+    "name": "ScriptableEvents",
+    "rootNamespace": "MSS.ScriptableEvents",
+    "references": [],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
