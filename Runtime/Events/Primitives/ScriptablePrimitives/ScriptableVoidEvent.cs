@@ -1,4 +1,4 @@
-using MSS.ScriptableEvents;
+using MSS.ScriptableEvents.Events;
 using UnityEngine;
 
 [System.Serializable]

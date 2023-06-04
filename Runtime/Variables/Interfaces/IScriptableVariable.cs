@@ -1,4 +1,7 @@
-namespace MSS.ScriptableEvents
+
+using MSS.ScriptableEvents.Events;
+
+namespace MSS.ScriptableEvents.Variables
 {
     public interface IScriptableVariable<T>
     {

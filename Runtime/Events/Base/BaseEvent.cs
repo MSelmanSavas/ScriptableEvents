@@ -1,7 +1,8 @@
 using UnityEngine;
 using UnityEngine.Events;
+using MSS.ScriptableEvents.Listeners;
 
-namespace MSS.ScriptableEvents
+namespace MSS.ScriptableEvents.Events
 {
     [System.Serializable]
     public abstract class BaseEvent : IEventData, IEventInvoker, IEventLogic

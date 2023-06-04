@@ -1,8 +1,9 @@
 using System.Collections.Generic;
+using MSS.ScriptableEvents.Events;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace MSS.ScriptableEvents
+namespace MSS.ScriptableEvents.Listeners
 {
     [System.Serializable]
     public abstract class BaseScriptableEventListener : ScriptableObject,

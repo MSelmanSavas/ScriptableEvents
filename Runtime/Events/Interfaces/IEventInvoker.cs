@@ -1,6 +1,4 @@
-
-
-namespace MSS.ScriptableEvents
+namespace MSS.ScriptableEvents.Events
 {
     public interface IEventInvoker
     {

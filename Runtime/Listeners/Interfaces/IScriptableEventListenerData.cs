@@ -1,7 +1,8 @@
 using System.Collections.Generic;
 using UnityEngine.Events;
+using MSS.ScriptableEvents.Events;
 
-namespace MSS.ScriptableEvents
+namespace MSS.ScriptableEvents.Listeners
 {
     public interface IScriptableEventListenerData
     {

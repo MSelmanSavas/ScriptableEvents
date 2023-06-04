@@ -1,4 +1,6 @@
-namespace MSS.ScriptableEvents
+using MSS.ScriptableEvents.Listeners;
+
+namespace MSS.ScriptableEvents.Events
 {
     public interface IScriptableEventLogic : IEventLogic
     {

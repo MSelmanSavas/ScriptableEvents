@@ -1,4 +1,4 @@
-using MSS.ScriptableEvents;
+using MSS.ScriptableEvents.Listeners;
 using UnityEngine;
 
 [System.Serializable]

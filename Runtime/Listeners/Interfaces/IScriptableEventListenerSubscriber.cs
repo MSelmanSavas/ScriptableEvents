@@ -1,4 +1,4 @@
-namespace MSS.ScriptableEvents
+namespace MSS.ScriptableEvents.Listeners
 {
     public interface IScriptableEventListenerSubscriber : IEventListenerSubscriber
     {

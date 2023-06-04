@@ -1,10 +1,11 @@
-using MSS.ScriptableEvents;
-
-[System.Serializable]
-public class ScriptableGenericEvent<T> : BaseScriptableEvent<T>
+namespace MSS.ScriptableEvents.Events
 {
-    public GenericEvent<T> GenericEvent;
-    public override IEventLogic<T> EventLogic => GenericEvent;
-    public override IEventInvoker<T> EventInvoker => GenericEvent;
-    public override IEventData<T> EventData => GenericEvent;
+    [System.Serializable]
+    public class ScriptableGenericEvent<T> : BaseScriptableEvent<T>
+    {
+        public GenericEvent<T> GenericEvent;
+        public override IEventLogic<T> EventLogic => GenericEvent;
+        public override IEventInvoker<T> EventInvoker => GenericEvent;
+        public override IEventData<T> EventData => GenericEvent;
+    }
 }

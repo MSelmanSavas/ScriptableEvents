@@ -2,6 +2,7 @@
 using UnityEngine;
 using UnityEditor;
 using System.Reflection;
+using MSS.ScriptableEvents.Events;
 
 namespace MSS.ScriptableEvents.Editor
 {
