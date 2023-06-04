@@ -14,17 +14,42 @@ namespace MSS.ScriptableEvents.Listeners
         protected UnityEvent _onInvokedActions = new();
 
         public virtual UnityEvent OnInvokedActions { get => _onInvokedActions; }
+        protected virtual List<IReadOnlyCollection<IEventLogic>> addonEventsCollections => new();
 
 #if ODIN_INSPECTOR
         [Sirenix.OdinInspector.ShowInInspector]
 #endif
         protected List<IEventLogic> _eventsToListen = new();
-
         public virtual List<IEventLogic> EventsToListen => _eventsToListen;
 
         #endregion
 
         #region Public Methods
+
+
+#if ODIN_INSPECTOR
+        [Sirenix.OdinInspector.Button]
+#endif
+        public virtual bool Initialize()
+        {
+            try
+            {
+                foreach (IReadOnlyCollection<IEventLogic> collection in addonEventsCollections)
+                {
+                    foreach (IEventLogic eventLogic in collection)
+                    {
+                        _eventsToListen.Add(eventLogic);
+                    }
+                }
+            }
+            catch (System.Exception e)
+            {
+                Debug.LogError(e);
+                return false;
+            }
+
+            return true;
+        }
 
         public virtual void OnInvoked()
         {
@@ -76,6 +101,15 @@ namespace MSS.ScriptableEvents.Listeners
 
         public virtual UnityEvent<T> OnInvokedActions { get => _onInvokedActions; }
 
+        protected virtual List<IReadOnlyCollection<IEventLogic<T>>> addonEventsCollections => new();
+
+        protected List<IEventLogic<T>> _eventsToListen = new();
+        public virtual List<IEventLogic<T>> EventsToListen { get; }
+
+        #endregion
+
+        #region Public Methods
+
 #if ODIN_INSPECTOR
         [Sirenix.OdinInspector.Button]
 #endif
@@ -99,16 +133,6 @@ namespace MSS.ScriptableEvents.Listeners
 
             return true;
         }
-
-
-        protected virtual List<IReadOnlyCollection<IEventLogic<T>>> addonEventsCollections => new();
-
-        protected List<IEventLogic<T>> _eventsToListen = new();
-        public virtual List<IEventLogic<T>> EventsToListen { get; }
-
-        #endregion
-
-        #region Public Methods
 
         public virtual void OnInvoked(T data)
         {
