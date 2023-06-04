@@ -6,12 +6,15 @@ namespace MSS.ScriptableEvents
 {
     [System.Serializable]
     public abstract class BaseScriptableEventListener : ScriptableObject,
-                                                            IScriptableEventListenerData,
                                                             IScriptableEventListenerLogic,
                                                             IScriptableEventListenerSubscriber,
                                                             IScriptableEventListenerInvoker
     {
         #region Members
+
+        public abstract IEventListenerLogic OnInvokedLogic { get; }
+        public abstract IEventListenerData OnInvokedData { get; }
+        public abstract IEventListenerInvoker OnInvokedActions { get; }
 
 #if UNITY_EDITOR
         #region Only Editor Fields and Methods
@@ -23,14 +26,6 @@ namespace MSS.ScriptableEvents
 
         #endregion
 #endif
-
-#if ODIN_INSPECTOR
-        [Sirenix.OdinInspector.ShowInInspector]
-#endif
-        [SerializeField]
-        protected UnityEvent _onInvokedActions = new();
-
-        public UnityEvent OnInvokedActions { get => _onInvokedActions; }
 
 
 #if ODIN_INSPECTOR
@@ -62,16 +57,16 @@ namespace MSS.ScriptableEvents
         }
 
 #if ODIN_INSPECTOR
-        [Sirenix.OdinInspector.ShowIf("ShowEditorUtilities")]
+        [Sirenix.OdinInspector.ShowIf("showEditorUtilities")]
         [Sirenix.OdinInspector.Button]
 #endif
         public void OnInvoked()
         {
-            OnInvokedActions?.Invoke();
+            OnInvokedActions?.OnInvoked();
         }
 
 #if ODIN_INSPECTOR
-        [Sirenix.OdinInspector.ShowIf("ShowEditorUtilities")]
+        [Sirenix.OdinInspector.ShowIf("showEditorUtilities")]
         [Sirenix.OdinInspector.Button]
 #endif
         public void Subscribe()
@@ -83,7 +78,7 @@ namespace MSS.ScriptableEvents
         }
 
 #if ODIN_INSPECTOR
-        [Sirenix.OdinInspector.ShowIf("ShowEditorUtilities")]
+        [Sirenix.OdinInspector.ShowIf("showEditorUtilities")]
         [Sirenix.OdinInspector.Button]
 #endif
         public void UnSubscribe()
@@ -97,7 +92,7 @@ namespace MSS.ScriptableEvents
 #if UNITY_EDITOR
 
 #if ODIN_INSPECTOR
-        [Sirenix.OdinInspector.ShowIf("ShowEditorUtilities")]
+        [Sirenix.OdinInspector.ShowIf("showEditorUtilities")]
         [Sirenix.OdinInspector.Button]
 #endif
         public void SubscribePersistent()
@@ -109,7 +104,7 @@ namespace MSS.ScriptableEvents
         }
 
 #if ODIN_INSPECTOR
-        [Sirenix.OdinInspector.ShowIf("ShowEditorUtilities")]
+        [Sirenix.OdinInspector.ShowIf("showEditorUtilities")]
         [Sirenix.OdinInspector.Button]
 #endif
         public void UnSubscribePersistent()
@@ -125,12 +120,15 @@ namespace MSS.ScriptableEvents
     }
 
     public abstract class BaseScriptableEventListener<T> : ScriptableObject,
-                                                            IScriptableEventListenerData<T>,
                                                             IScriptableEventListenerLogic<T>,
                                                             IScriptableEventListenerSubscriber,
                                                             IScriptableEventListenerInvoker<T>
     {
         #region Members
+
+        public abstract IEventListenerLogic<T> OnInvokedLogic { get; }
+        public abstract IEventListenerData<T> OnInvokedData { get; }
+        public abstract IEventListenerInvoker<T> OnInvokedActions { get; }
 
 #if UNITY_EDITOR
         #region Only Editor Fields and Methods
@@ -147,21 +145,11 @@ namespace MSS.ScriptableEvents
 
         public virtual void InvokeForEditor()
         {
-            OnInvokedActions?.Invoke(editorData);
+            OnInvokedActions?.OnInvoked(editorData);
         }
 
         #endregion
 #endif
-
-
-#if ODIN_INSPECTOR
-        [Sirenix.OdinInspector.ShowInInspector]
-#endif
-        [SerializeField]
-        protected UnityEvent<T> _onInvokedActions = new();
-
-        public UnityEvent<T> OnInvokedActions { get => _onInvokedActions; }
-
 
 #if ODIN_INSPECTOR
         [Sirenix.OdinInspector.ShowInInspector]
@@ -197,7 +185,7 @@ namespace MSS.ScriptableEvents
 #endif
         public void OnInvoked(T data)
         {
-            OnInvokedActions?.Invoke(data);
+            OnInvokedActions?.OnInvoked(data);
         }
 
 #if ODIN_INSPECTOR

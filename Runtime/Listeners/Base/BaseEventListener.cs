@@ -10,9 +10,9 @@ namespace MSS.ScriptableEvents
         #region Members
 
         [SerializeField]
-        protected UnityEvent _actions = new();
+        protected UnityEvent _onInvokedActions = new();
 
-        public virtual UnityEvent Actions { get => _actions; }
+        public virtual UnityEvent OnInvokedActions { get => _onInvokedActions; }
 
 #if ODIN_INSPECTOR
         [Sirenix.OdinInspector.ShowInInspector]
@@ -27,7 +27,7 @@ namespace MSS.ScriptableEvents
 
         public virtual void OnInvoked()
         {
-            _actions?.Invoke();
+            _onInvokedActions?.Invoke();
         }
 
         public virtual void Subscribe()
@@ -71,9 +71,9 @@ namespace MSS.ScriptableEvents
         #region Members
 
         [SerializeField]
-        protected UnityEvent<T> _actions = new();
+        protected UnityEvent<T> _oInvokedActions = new();
 
-        public virtual UnityEvent<T> Actions { get => _actions; }
+        public virtual UnityEvent<T> OnInvokedActions { get => _oInvokedActions; }
 
 #if ODIN_INSPECTOR
         [Sirenix.OdinInspector.ShowInInspector]
@@ -88,7 +88,7 @@ namespace MSS.ScriptableEvents
 
         public virtual void OnInvoked(T data)
         {
-            Actions?.Invoke(data);
+            OnInvokedActions?.Invoke(data);
         }
 
         public virtual void Subscribe()

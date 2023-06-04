@@ -1,18 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
+using MSS.ScriptableEvents;
 using UnityEngine;
 
-public class ScriptableGenericEventListener : MonoBehaviour
+public class ScriptableGenericEventListener<T> : BaseScriptableEventListener<T>
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    [SerializeField]
+    protected GenericEventListener<T> _eventListener = new();
+    public override IEventListenerLogic<T> OnInvokedLogic => _eventListener;
+    public override IEventListenerData<T> OnInvokedData => _eventListener;
+    public override IEventListenerInvoker<T> OnInvokedActions => _eventListener;
 }
