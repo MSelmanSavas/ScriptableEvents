@@ -1,7 +1,7 @@
 using MSS.ScriptableEvents.Listeners;
 
 [System.Serializable]
-public class IntEventListener : GenericEventListener<int>
+public class FloatEventListener : GenericEventListener<float>
 {
 
 }
