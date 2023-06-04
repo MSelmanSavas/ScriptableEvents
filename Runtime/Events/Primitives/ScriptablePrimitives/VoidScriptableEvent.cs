@@ -3,7 +3,7 @@ using UnityEngine;
 
 [System.Serializable]
 [CreateAssetMenu(fileName = "NewVoidEvent", menuName = "ScriptableEvents/Events/Create Void Event")]
-public class ScriptableVoidEvent : BaseScriptableEvent
+public class VoidScriptableEvent : BaseScriptableEvent
 {
     [SerializeField]
     protected VoidEvent _voidEvent = new();

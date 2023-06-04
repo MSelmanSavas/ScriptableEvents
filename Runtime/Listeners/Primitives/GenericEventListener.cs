@@ -8,14 +8,14 @@ namespace MSS.ScriptableEvents.Listeners
     public class GenericEventListener<T> : BaseEventListener<T>
     {
         [SerializeField]
-        protected List<ScriptableGenericEvent<T>> _scriptableEventsToListen = new();
+        protected List<GenericScriptableEvent<T>> scriptableEventsToListen = new();
 
         protected override List<IReadOnlyCollection<IEventLogic<T>>> addonEventsCollections
         {
             get
             {
                 var baseAddons = base.addonEventsCollections;
-                baseAddons.Add(_scriptableEventsToListen);
+                baseAddons.Add(scriptableEventsToListen);
                 return baseAddons;
             }
         }

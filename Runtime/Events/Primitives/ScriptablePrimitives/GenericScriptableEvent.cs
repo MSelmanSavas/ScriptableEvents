@@ -1,7 +1,7 @@
 namespace MSS.ScriptableEvents.Events
 {
     [System.Serializable]
-    public class ScriptableGenericEvent<T> : BaseScriptableEvent<T>
+    public class GenericScriptableEvent<T> : BaseScriptableEvent<T>
     {
         public GenericEvent<T> GenericEvent;
         public override IEventLogic<T> EventLogic => GenericEvent;

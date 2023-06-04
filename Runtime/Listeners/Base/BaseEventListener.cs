@@ -11,16 +11,13 @@ namespace MSS.ScriptableEvents.Listeners
         #region Members
 
         [SerializeField]
-        protected UnityEvent _onInvokedActions = new();
+        protected UnityEvent onInvokedActions = new();
+        public virtual UnityEvent OnInvokedActions { get => onInvokedActions; }
 
-        public virtual UnityEvent OnInvokedActions { get => _onInvokedActions; }
         protected virtual List<IReadOnlyCollection<IEventLogic>> addonEventsCollections => new();
 
-#if ODIN_INSPECTOR
-        [Sirenix.OdinInspector.ShowInInspector]
-#endif
-        protected List<IEventLogic> _eventsToListen = new();
-        public virtual List<IEventLogic> EventsToListen => _eventsToListen;
+        protected List<IEventLogic> eventsToListen = new();
+        public virtual List<IEventLogic> EventsToListen => eventsToListen;
 
         #endregion
 
@@ -38,7 +35,7 @@ namespace MSS.ScriptableEvents.Listeners
                 {
                     foreach (IEventLogic eventLogic in collection)
                     {
-                        _eventsToListen.Add(eventLogic);
+                        eventsToListen.Add(eventLogic);
                     }
                 }
             }
@@ -53,7 +50,7 @@ namespace MSS.ScriptableEvents.Listeners
 
         public virtual void OnInvoked()
         {
-            _onInvokedActions?.Invoke();
+            onInvokedActions?.Invoke();
         }
 
         public virtual void Subscribe()
@@ -74,7 +71,7 @@ namespace MSS.ScriptableEvents.Listeners
 
         public virtual void AddEventToListen(IEventLogic eventLogic, bool updateSubscription = false)
         {
-            _eventsToListen.Add(eventLogic);
+            eventsToListen.Add(eventLogic);
 
             if (updateSubscription)
                 eventLogic.AddListener(this);
@@ -82,7 +79,7 @@ namespace MSS.ScriptableEvents.Listeners
 
         public virtual void RemoveEventToListen(IEventLogic eventLogic, bool updateSubscription = false)
         {
-            _eventsToListen.Remove(eventLogic);
+            eventsToListen.Remove(eventLogic);
 
             if (updateSubscription)
                 eventLogic.RemoveListener(this);
@@ -97,13 +94,13 @@ namespace MSS.ScriptableEvents.Listeners
         #region Members
 
         [SerializeField]
-        protected UnityEvent<T> _onInvokedActions = new();
+        protected UnityEvent<T> onInvokedActions = new();
 
-        public virtual UnityEvent<T> OnInvokedActions { get => _onInvokedActions; }
+        public virtual UnityEvent<T> OnInvokedActions { get => onInvokedActions; }
 
         protected virtual List<IReadOnlyCollection<IEventLogic<T>>> addonEventsCollections => new();
 
-        protected List<IEventLogic<T>> _eventsToListen = new();
+        protected List<IEventLogic<T>> eventsToListen = new();
         public virtual List<IEventLogic<T>> EventsToListen { get; }
 
         #endregion
@@ -121,7 +118,7 @@ namespace MSS.ScriptableEvents.Listeners
                 {
                     foreach (IEventLogic<T> eventLogic in collection)
                     {
-                        _eventsToListen.Add(eventLogic);
+                        eventsToListen.Add(eventLogic);
                     }
                 }
             }
@@ -141,7 +138,7 @@ namespace MSS.ScriptableEvents.Listeners
 
         public virtual void Subscribe()
         {
-            foreach (var events in _eventsToListen)
+            foreach (var events in eventsToListen)
             {
                 events.AddListener(this);
             }
@@ -149,7 +146,7 @@ namespace MSS.ScriptableEvents.Listeners
 
         public virtual void UnSubscribe()
         {
-            foreach (var events in _eventsToListen)
+            foreach (var events in eventsToListen)
             {
                 events.RemoveListener(this);
             }
@@ -157,7 +154,7 @@ namespace MSS.ScriptableEvents.Listeners
 
         public virtual void AddEventToListen(IEventLogic<T> eventLogic, bool updateSubscription = false)
         {
-            _eventsToListen.Add(eventLogic);
+            eventsToListen.Add(eventLogic);
 
             if (updateSubscription)
                 eventLogic.AddListener(this);
@@ -165,7 +162,7 @@ namespace MSS.ScriptableEvents.Listeners
 
         public virtual void RemoveEventToListen(IEventLogic<T> eventLogic, bool updateSubscription = false)
         {
-            _eventsToListen.Remove(eventLogic);
+            eventsToListen.Remove(eventLogic);
 
             if (updateSubscription)
                 eventLogic.RemoveListener(this);
