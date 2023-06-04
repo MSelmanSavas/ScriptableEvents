@@ -6,7 +6,7 @@ using MSS.ScriptableEvents.Events;
 namespace MSS.ScriptableEvents.Listeners
 {
     [System.Serializable]
-    public abstract class BaseEventListener : IEventListenerData, IEventListenerSubscriber, IEventListenerLogic, IEventListenerInvoker
+    public class BaseEventListener : IEventListenerData, IEventListenerSubscriber, IEventListenerLogic, IEventListenerInvoker
     {
         #region Members
 
@@ -72,16 +72,39 @@ namespace MSS.ScriptableEvents.Listeners
         #region Members
 
         [SerializeField]
-        protected UnityEvent<T> _oInvokedActions = new();
+        protected UnityEvent<T> _onInvokedActions = new();
 
-        public virtual UnityEvent<T> OnInvokedActions { get => _oInvokedActions; }
+        public virtual UnityEvent<T> OnInvokedActions { get => _onInvokedActions; }
 
 #if ODIN_INSPECTOR
-        [Sirenix.OdinInspector.ShowInInspector]
+        [Sirenix.OdinInspector.Button]
 #endif
-        protected List<IEventLogic<T>> _eventsToListen = new();
+        public virtual bool Initialize()
+        {
+            try
+            {
+                foreach (IReadOnlyCollection<IEventLogic<T>> collection in addonEventsCollections)
+                {
+                    foreach (IEventLogic<T> eventLogic in collection)
+                    {
+                        _eventsToListen.Add(eventLogic);
+                    }
+                }
+            }
+            catch (System.Exception e)
+            {
+                Debug.LogError(e);
+                return false;
+            }
 
-        public virtual List<IEventLogic<T>> EventsToListen => _eventsToListen;
+            return true;
+        }
+
+
+        protected virtual List<IReadOnlyCollection<IEventLogic<T>>> addonEventsCollections => new();
+
+        protected List<IEventLogic<T>> _eventsToListen = new();
+        public virtual List<IEventLogic<T>> EventsToListen { get; }
 
         #endregion
 
@@ -94,7 +117,7 @@ namespace MSS.ScriptableEvents.Listeners
 
         public virtual void Subscribe()
         {
-            foreach (var events in EventsToListen)
+            foreach (var events in _eventsToListen)
             {
                 events.AddListener(this);
             }
@@ -102,7 +125,7 @@ namespace MSS.ScriptableEvents.Listeners
 
         public virtual void UnSubscribe()
         {
-            foreach (var events in EventsToListen)
+            foreach (var events in _eventsToListen)
             {
                 events.RemoveListener(this);
             }
