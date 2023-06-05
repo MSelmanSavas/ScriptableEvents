@@ -4,7 +4,7 @@ using UnityEditor;
 using System.Reflection;
 using MSS.ScriptableEvents.Events;
 
-namespace MSS.ScriptableEvents.Editor
+namespace MSS.ScriptableEvents.Editor.Events
 {
 #if ODIN_INSPECTOR
 
@@ -106,7 +106,6 @@ namespace MSS.ScriptableEvents.Editor
 
             void DrawEditorUtilities()
             {
-
                 MethodInfo foundInvokeForEditorMethodInfo = null;
 
                 foreach (MethodInfo methodInfo in target.GetType().GetMethods(BindingFlags.FlattenHierarchy | BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public))

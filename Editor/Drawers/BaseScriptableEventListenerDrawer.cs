@@ -3,7 +3,7 @@ using MSS.ScriptableEvents.Listeners;
 using UnityEditor;
 using UnityEngine;
 
-namespace MSS.ScriptableEvents.Editor
+namespace MSS.ScriptableEvents.Editor.Listeners
 {
 
 #if ODIN_INSPECTOR
