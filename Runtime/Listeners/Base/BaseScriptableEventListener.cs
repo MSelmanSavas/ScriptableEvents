@@ -13,6 +13,17 @@ namespace MSS.ScriptableEvents.Listeners
     {
         #region Members
 
+        [System.NonSerialized]
+        bool _isSubscribed = false;
+        public bool IsAlreadySubscribed => _isSubscribed;
+
+        [System.NonSerialized]
+        EnumAutoActivationMode _previousActivationMode;
+
+        [SerializeField]
+        protected EnumAutoActivationMode activationMode;
+        public EnumAutoActivationMode ActivationMode => activationMode;
+
         public abstract IEventListenerLogic OnInvokedLogic { get; }
         public abstract IEventListenerData OnInvokedData { get; }
         public abstract IEventListenerInvoker OnInvokedActions { get; }
@@ -74,7 +85,7 @@ namespace MSS.ScriptableEvents.Listeners
         {
             foreach (var scriptableEvent in _scriptableEventsToListen)
             {
-                scriptableEvent.AddListener(this);
+                scriptableEvent?.AddListener(this);
             }
         }
 
@@ -86,7 +97,7 @@ namespace MSS.ScriptableEvents.Listeners
         {
             foreach (var scriptableEvent in _scriptableEventsToListen)
             {
-                scriptableEvent.RemoveListener(this);
+                scriptableEvent?.RemoveListener(this);
             }
         }
 
@@ -100,7 +111,7 @@ namespace MSS.ScriptableEvents.Listeners
         {
             foreach (var scriptableEvent in _scriptableEventsToListen)
             {
-                scriptableEvent.AddPersistentListener(this);
+                scriptableEvent?.AddPersistentListener(this);
             }
         }
 
@@ -112,12 +123,107 @@ namespace MSS.ScriptableEvents.Listeners
         {
             foreach (var scriptableEvent in _scriptableEventsToListen)
             {
-                scriptableEvent.RemovePersistentListener(this);
+                scriptableEvent?.RemovePersistentListener(this);
             }
         }
 #endif
 
         #endregion
+
+        private void OnEnable()
+        {
+#if UNITY_EDITOR
+
+            UnityEditor.EditorApplication.playModeStateChanged += PlayStateChanged;
+
+#elif !UNITY_EDITOR
+            if (activationMode.HasFlag(EnumAutoActivationMode.PlayMode))
+            {
+                UnSubscribe();
+                Subscribe();
+            }
+
+            _previousActivationMode = activationMode;
+#endif
+        }
+
+
+        private void OnDisable()
+        {
+
+#if !UNITY_EDITOR       
+
+            if (activationMode.HasFlag(EnumAutoActivationMode.PlayMode))
+            {
+                UnSubscribe();
+            }
+
+            _previousActivationMode = activationMode;
+#endif
+        }
+
+#if UNITY_EDITOR
+
+        void PlayStateChanged(UnityEditor.PlayModeStateChange state)
+        {
+            OnEditorInitialize();
+
+            switch (state)
+            {
+                case UnityEditor.PlayModeStateChange.EnteredPlayMode:
+                    {
+                        if (activationMode.HasFlag(EnumAutoActivationMode.PlayMode))
+                        {
+                            UnSubscribe();
+                            Subscribe();
+                        }
+
+                        break;
+                    }
+                case UnityEditor.PlayModeStateChange.ExitingPlayMode:
+                    {
+                        if (activationMode.HasFlag(EnumAutoActivationMode.PlayMode))
+                        {
+                            UnSubscribe();
+                        }
+                        break;
+                    }
+            }
+
+            _previousActivationMode = activationMode;
+        }
+
+        void OnEditorInitialize()
+        {
+            if (activationMode.HasFlag(EnumAutoActivationMode.EditorMode)
+             && !UnityEditor.EditorApplication.isPlayingOrWillChangePlaymode)
+            {
+                UnSubscribe();
+                Subscribe();
+            }
+
+            if (_previousActivationMode.HasFlag(EnumAutoActivationMode.EditorMode)
+            && !activationMode.HasFlag(EnumAutoActivationMode.EditorMode))
+            {
+                UnSubscribe();
+            }
+
+            if (activationMode.HasFlag(EnumAutoActivationMode.EditorMode)
+            && !activationMode.HasFlag(EnumAutoActivationMode.PlayMode)
+            && UnityEditor.EditorApplication.isPlayingOrWillChangePlaymode)
+            {
+                UnSubscribe();
+            }
+
+            _previousActivationMode = activationMode;
+        }
+
+        private void OnValidate()
+        {
+            OnEditorInitialize();
+        }
+#endif
+
     }
 
     public abstract class BaseScriptableEventListener<T> : ScriptableObject,
@@ -126,6 +232,17 @@ namespace MSS.ScriptableEvents.Listeners
                                                             IScriptableEventListenerInvoker<T>
     {
         #region Members
+
+        [System.NonSerialized]
+        bool _isSubscribed = false;
+        public bool IsAlreadySubscribed => _isSubscribed;
+
+        [System.NonSerialized]
+        EnumAutoActivationMode _previousActivationMode;
+
+        [SerializeField]
+        protected EnumAutoActivationMode activationMode;
+        public EnumAutoActivationMode ActivationMode => activationMode;
 
         public abstract IEventListenerLogic<T> OnInvokedLogic { get; }
         public abstract IEventListenerData<T> OnInvokedData { get; }
@@ -197,8 +314,10 @@ namespace MSS.ScriptableEvents.Listeners
         {
             foreach (var scriptableEvent in _scriptableEventsToListen)
             {
-                scriptableEvent.AddListener(this);
+                scriptableEvent?.AddListener(this);
             }
+
+            _isSubscribed = true;
         }
 
 #if ODIN_INSPECTOR
@@ -209,8 +328,10 @@ namespace MSS.ScriptableEvents.Listeners
         {
             foreach (var scriptableEvent in _scriptableEventsToListen)
             {
-                scriptableEvent.RemoveListener(this);
+                scriptableEvent?.RemoveListener(this);
             }
+
+            _isSubscribed = false;
         }
 
 #if UNITY_EDITOR
@@ -223,7 +344,7 @@ namespace MSS.ScriptableEvents.Listeners
         {
             foreach (var scriptableEvent in _scriptableEventsToListen)
             {
-                scriptableEvent.AddPersistentListener(this);
+                scriptableEvent?.AddPersistentListener(this);
             }
         }
 
@@ -235,12 +356,108 @@ namespace MSS.ScriptableEvents.Listeners
         {
             foreach (var scriptableEvent in _scriptableEventsToListen)
             {
-                scriptableEvent.RemovePersistentListener(this);
+                scriptableEvent?.RemovePersistentListener(this);
             }
         }
 #endif
 
         #endregion
+
+        private void OnEnable()
+        {
+#if UNITY_EDITOR
+
+            UnityEditor.EditorApplication.playModeStateChanged += PlayStateChanged;
+
+#elif !UNITY_EDITOR
+            if (activationMode.HasFlag(EnumAutoActivationMode.PlayMode))
+            {
+                UnSubscribe();
+                Subscribe();
+            }
+
+            _previousActivationMode = activationMode;
+#endif
+        }
+
+
+        private void OnDisable()
+        {
+
+#if !UNITY_EDITOR       
+
+            if (activationMode.HasFlag(EnumAutoActivationMode.PlayMode))
+            {
+                UnSubscribe();
+            }
+
+            _previousActivationMode = activationMode;
+#endif
+        }
+
+#if UNITY_EDITOR
+
+
+        void PlayStateChanged(UnityEditor.PlayModeStateChange state)
+        {
+            OnEditorInitialize();
+
+            switch (state)
+            {
+                case UnityEditor.PlayModeStateChange.EnteredPlayMode:
+                    {
+                        if (activationMode.HasFlag(EnumAutoActivationMode.PlayMode))
+                        {
+                            UnSubscribe();
+                            Subscribe();
+                        }
+
+                        break;
+                    }
+                case UnityEditor.PlayModeStateChange.ExitingPlayMode:
+                    {
+                        if (activationMode.HasFlag(EnumAutoActivationMode.PlayMode))
+                        {
+                            UnSubscribe();
+                        }
+                        break;
+                    }
+            }
+
+            _previousActivationMode = activationMode;
+        }
+
+        void OnEditorInitialize()
+        {
+            if (activationMode.HasFlag(EnumAutoActivationMode.EditorMode)
+             && !UnityEditor.EditorApplication.isPlayingOrWillChangePlaymode)
+            {
+                UnSubscribe();
+                Subscribe();
+            }
+
+            if (_previousActivationMode.HasFlag(EnumAutoActivationMode.EditorMode)
+            && !activationMode.HasFlag(EnumAutoActivationMode.EditorMode))
+            {
+                UnSubscribe();
+            }
+
+            if (activationMode.HasFlag(EnumAutoActivationMode.EditorMode)
+            && !activationMode.HasFlag(EnumAutoActivationMode.PlayMode)
+            && UnityEditor.EditorApplication.isPlayingOrWillChangePlaymode)
+            {
+                UnSubscribe();
+            }
+
+            _previousActivationMode = activationMode;
+        }
+
+        private void OnValidate()
+        {
+            OnEditorInitialize();
+        }
+#endif
+
     }
 
 }
