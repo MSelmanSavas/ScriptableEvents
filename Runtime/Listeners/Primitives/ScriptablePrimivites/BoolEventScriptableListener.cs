@@ -3,7 +3,7 @@ using UnityEngine;
 
 [System.Serializable]
 [CreateAssetMenu(fileName = "NewBoolListener", menuName = "ScriptableEvents/Listeners/Create Bool Listener")]
-public class BoolEventScriptableListener : ScriptableGenericEventListener<bool>
+public class BoolEventScriptableListener : GenericScriptableEventListener<bool>
 {
 
 }
