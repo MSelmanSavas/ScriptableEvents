@@ -3,7 +3,7 @@ using UnityEngine;
 
 [System.Serializable]
 [CreateAssetMenu(fileName = "NewFloatListener", menuName = "ScriptableEvents/Listeners/Create Float Listener")]
-public class ScriptableFloatEventListener : ScriptableGenericEventListener<float>
+public class FloatScriptableEventListener : ScriptableGenericEventListener<float>
 {
 
 }

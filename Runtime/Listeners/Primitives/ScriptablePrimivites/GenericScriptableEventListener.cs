@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace MSS.ScriptableEvents.Listeners
 {
-    public class ScriptableGenericEventListener<T> : BaseScriptableEventListener<T>
+    public class GenericScriptableEventListener<T> : BaseScriptableEventListener<T>
     {
         [SerializeField]
         protected GenericEventListener<T> _eventListener = new();

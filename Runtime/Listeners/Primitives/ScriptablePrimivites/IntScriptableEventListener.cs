@@ -3,7 +3,7 @@ using UnityEngine;
 
 [System.Serializable]
 [CreateAssetMenu(fileName = "NewIntListener", menuName = "ScriptableEvents/Listeners/Create Int Listener")]
-public class ScriptableIntEventListener : ScriptableGenericEventListener<int>
+public class IntScriptableEventListener : GenericScriptableEventListener<int>
 {
 
 }

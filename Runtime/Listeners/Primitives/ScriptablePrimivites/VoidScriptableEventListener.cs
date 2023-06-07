@@ -3,7 +3,7 @@ using UnityEngine;
 
 [System.Serializable]
 [CreateAssetMenu(fileName = "NewVoidListener", menuName = "ScriptableEvents/Listeners/Create Void Listener")]
-public class ScriptableVoidEventListener : BaseScriptableEventListener
+public class VoidScriptableEventListener : BaseScriptableEventListener
 {
     [SerializeField]
     protected VoidEventListener _eventListener = new();
