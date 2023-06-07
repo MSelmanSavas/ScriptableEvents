@@ -1,0 +1,18 @@
+{
+    "name": "com.mss.scriptableevents",
+    "version": "0.1.0",
+    "displayName": "Scriptable Events",
+    "description": "Making event based systems easy by reducing dependencies between systems!",
+    "unity": "2021.3",
+    "keywords": [
+        "Scriptable Object",
+        "Events",
+        "Scriptable"
+    ],
+    "documentationUrl": "https://github.com/MSelmanSavas/ScriptableEvents",
+    "author": {
+        "name": "Mehmet Selman Savaş",
+        "email": "mehmetselmansavas@gmail.com",
+        "url": "https://github.com/MSelmanSavas"
+    }
+}
