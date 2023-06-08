@@ -1,5 +1,6 @@
 # ScriptableEvents for Unity
 Scriptable Object based event management system for reducing dependencies between scripts. Easy to use and easy to customize for your own projects! It's UI components are also [Odin Inspector](https://odininspector.com/) compatible!
+
 ## Introduction
 In most cases, most of the systems can get dependent to each other to alter or display data. 
 ```mermaid
@@ -14,6 +15,10 @@ With ScriptableEvents you can seperate these dependencies for more realiable cod
 	PlayerHealthUIHandler-->ScriptableEvent_OnHealthChanged;
 ```
 ## How To Install
+
+> **Warning**
+> 
+> Compatible with Unity 2021.3+!
 
 Package registry will be available soon! Until then, feel free to download the git project and put it in your project as a folder!
 
