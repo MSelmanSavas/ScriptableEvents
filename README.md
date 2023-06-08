@@ -15,6 +15,8 @@ With ScriptableEvents you can seperate these dependencies for more realiable cod
 ```
 ## How To Install
 
+Package registry will be available soon! Until then, feel free to download the git project and put it in your project as a folder!
+
 ## How To Use
 There are three main categories for ScriptableEvents. Events, Listeners and Variables. But it is not strictly limited to Scriptable Objects! You can define these as BaseEvent, BaseEventListener, GenericVariable for non ScriptableObject use cases for using them as variables inside other scripts without using ScriptableObject types!
 
@@ -29,7 +31,11 @@ using MSS.ScriptableEvents.Events;
 [CreateAssetMenu(fileName = "File name here!", menuName = "Custom Menu Path here!")]
 public class CustomScriptableEvent : GenericScriptableEvent<CustomData> { }
 ```
+![image](https://github.com/MSelmanSavas/ScriptableEvents/assets/105663238/5b45beba-0bad-47b1-8e64-5a1040dd1eeb)
+
 It is as easy as this to create a custom scriptable event!
+
+There are editor only  only settings and actions for testing and triggering events from editor too!
 
 For creating events to use in other scripts without using scriptable objects, you can create them as such.
 ```csharp
@@ -46,6 +52,8 @@ public class CustomMonoBehaviour : MonoBehaviour
 	CustomEvent _customEvent;
 }
 ```
+![image](https://github.com/MSelmanSavas/ScriptableEvents/assets/105663238/f29b4d10-6ec8-488e-bc0c-1a139530ce3b)
+
 For non generic use cases and if you want to make it more personalized, or to make it have more specialized functions or use cases, you can directly inherit from the BaseScriptableEvent class!
 
 ```csharp
@@ -109,14 +117,24 @@ using MSS.ScriptableEvents.Listeners;
 [System.Serializable]
 public class CustomEventListener : BaseEventListener<CustomData> { }
 ```
+![image](https://github.com/MSelmanSavas/ScriptableEvents/assets/105663238/129f3c7a-4a66-4e9c-9363-d8a11f496889)
+
+There are editor only settings and actions for testing and triggering listeners from editor too!
+
+![image](https://github.com/MSelmanSavas/ScriptableEvents/assets/105663238/4f3c1c9c-2823-4ba1-86f9-5305fce582df)
+
+There is also activation mode selection for automatically subscribe to given events on the created scriptable event listener! You can make it auto subscribe in play mode, editor mode, or both! So you can use it in editor mode for testing, or even in editor tools!
+
 You can also use the created custom listeners inside of your mono behaviour for more customization! Listeners can be serialized for editor time data manipulation. With this you can seperate your scriptable listeners from code defined ones for each use case.
 ```csharp
 public class CustomMonoBehaviour : MonoBehaviour
 {
 	[SerializeField]
-	CustomEventListener _customEvent;
+	CustomEventListener _customEventListener;
 }
 ```
+
+![image](https://github.com/MSelmanSavas/ScriptableEvents/assets/105663238/65c2fc50-1c41-43b8-b6a1-050cb04b9f8e)
 
 For non generic use cases and if you want to make it more personalized, or to make it have more specialized functions or use cases, you can directly inherit from the BaseScriptableEventListener class!
 
@@ -194,6 +212,9 @@ using MSS.ScriptableEvents.Variables;
 [System.Serializable]
 public class CustomScriptableVariable : GenericScriptableVariable<CustomData> { }
 ```
+
+![image](https://github.com/MSelmanSavas/ScriptableEvents/assets/105663238/297743b2-a858-455e-944b-a4239d434f42)
+
 Thats it! You can reference the custom variable from any script to change its value!
 
 As with events and listeners, you can also create your own GenericVariable for using it only in code without using Scriptable Objects!
@@ -204,12 +225,18 @@ using MSS.ScriptableEvents.Variables;
 [System.Serializable]
 public class CustomVariable : GenericVariable<CustomData> { }
 ```
+
+![image](https://github.com/MSelmanSavas/ScriptableEvents/assets/105663238/0598fa05-e7a6-4b30-8a41-10b03456257b)
+
 There are predefined variables in package for types :
 
  - BoolScriptableVariable
  - FloatScriptableVariable
  - IntScriptableVariable
  - StringScriptableVariable
+## Examples
+
+Will be coming soon!
 
 ## Acknowledgments
 
