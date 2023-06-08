@@ -76,6 +76,8 @@ namespace MSS.ScriptableEvents.Editor.Listeners
     [UnityEditor.CustomEditor(typeof(BaseScriptableEventListener<>), editorForChildClasses: true)]
     public class BaseScriptableEventListenerGenericDrawer : Sirenix.OdinInspector.Editor.OdinEditor
     {
+        bool _isEditorDataFoldoutOpen = false;
+
         public override void OnInspectorGUI()
         {
             if (Sirenix.OdinInspector.Editor.InspectorConfig.Instance.EnableOdinInInspector)
@@ -128,7 +130,24 @@ namespace MSS.ScriptableEvents.Editor.Listeners
 
                 SerializedProperty serializedProperty = serializedObject.FindProperty(foundEditorData.Name);
 
-                EditorGUILayout.PropertyField(serializedProperty, true);
+                _isEditorDataFoldoutOpen = EditorGUILayout.BeginFoldoutHeaderGroup(_isEditorDataFoldoutOpen, "Editor Data");
+
+                if (_isEditorDataFoldoutOpen)
+                {
+                    int startingDepth = serializedProperty.depth;
+
+                    serializedProperty.Next(true);
+
+                    do
+                    {
+                        EditorGUILayout.PropertyField(serializedProperty, true);
+                        serializedProperty.Next(false);
+
+                    } while (serializedProperty.depth > startingDepth);
+                }
+
+                EditorGUILayout.EndFoldoutHeaderGroup();
+
                 serializedObject.ApplyModifiedProperties();
             }
 
